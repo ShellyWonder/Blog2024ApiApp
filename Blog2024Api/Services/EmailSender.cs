@@ -3,15 +3,15 @@ using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MailKit.Net.Smtp;
-using Blog2024ApiApp.ViewModels;
+using Blog2024ApiApp.DTO;
 using Blog2024ApiApp.Services.Interfaces;
 
 namespace Blog2024ApiApp.Services
 {
 #region PRIMARY CONSTRUCTOR
-    public class EmailSender(IOptions<MailSettings> mailSettings) : IBlogEmailSender
+    public class EmailSender(IOptions<MailSettingsDTO> mailSettings) : IBlogEmailSender
     {
-        private readonly MailSettings _mailSettings = mailSettings.Value; 
+        private readonly MailSettingsDTO _mailSettings = mailSettings.Value; 
         #endregion
 
 #region SEND CONTACT EMAIL

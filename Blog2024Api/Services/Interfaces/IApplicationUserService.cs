@@ -1,23 +1,23 @@
 ﻿using Blog2024ApiApp.Data;
-using Blog2024ApiApp.ViewModels;
+using Blog2024ApiApp.DTO;
 
 namespace Blog2024ApiApp.Services.Interfaces
 {
     public interface IApplicationUserService
     {
-        Task<IEnumerable<UserViewModel?>> GetAllUsersAsync();
-        Task<UserViewModel?> GetUserByIdAsync(string id);
-        Task<UserViewModel?> GetAuthorByIdAsync(string id);
-        Task<UserViewModel?> GetBlogAuthorByIdAsync(string id);
-        Task<UserViewModel?> GetPostAuthorByIdAsync(string id);
-        Task<IEnumerable<UserViewModel?>> GetAllAdministratorsAsync();
-        Task<UserViewModel?> GetAdministratorByIdAsync(string id);
-        Task<IEnumerable<UserViewModel?>> GetAllAuthorsAsync();
+        Task<IEnumerable<UserDTO?>> GetAllUsersAsync();
+        Task<UserDTO?> GetUserByIdAsync(string id);
+        Task<UserDTO?> GetAuthorByIdAsync(string id);
+        Task<UserDTO?> GetBlogAuthorByIdAsync(string id);
+        Task<UserDTO?> GetPostAuthorByIdAsync(string id);
+        Task<IEnumerable<UserDTO?>> GetAllAdministratorsAsync();
+        Task<UserDTO?> GetAdministratorByIdAsync(string id);
+        Task<IEnumerable<UserDTO?>> GetAllAuthorsAsync();
 
-        Task<IEnumerable<UserViewModel?>> GetAllBlogAuthorsAsync();
-        Task<IEnumerable<UserViewModel?>> GetAllPostAuthorsAsync();
-        Task<IEnumerable<UserViewModel?>> GetAllModeratorsAsync();
-        Task<UserViewModel?> GetModeratorByIdAsync(string id);
+        Task<IEnumerable<UserDTO?>> GetAllBlogAuthorsAsync();
+        Task<IEnumerable<UserDTO?>> GetAllPostAuthorsAsync();
+        Task<IEnumerable<UserDTO?>> GetAllModeratorsAsync();
+        Task<UserDTO?> GetModeratorByIdAsync(string id);
 
     }  
 }

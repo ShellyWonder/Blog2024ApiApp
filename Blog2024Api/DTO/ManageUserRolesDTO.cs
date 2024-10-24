@@ -1,8 +1,8 @@
 ﻿using Blog2024ApiApp.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
-namespace Blog2024ApiApp.ViewModels
+namespace Blog2024ApiApp.DTO
 {
-    public class ManageUserRolesViewModel
+    public class ManageUserRolesDTO
     {
         public ApplicationUser? ApplicationUser { get; set; }
 

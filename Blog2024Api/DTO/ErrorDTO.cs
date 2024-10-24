@@ -1,6 +1,6 @@
-namespace Blog2024ApiApp.ViewModels
+namespace Blog2024ApiApp.DTO
 {
-    public class ErrorViewModel
+    public class ErrorDTO
     {
         public string? RequestId { get; set; }
 

@@ -3,7 +3,7 @@ using Blog2024ApiApp.Data.Repositories.Interfaces;
 using Blog2024ApiApp.Data.Repositories;
 using Blog2024ApiApp.Services.Interfaces;
 using Blog2024ApiApp.Services;
-using Blog2024ApiApp.ViewModels;
+using Blog2024ApiApp.DTO;
 using Blog2024ApiApp.Data.SeedData;
 
 namespace Blog2024ApiApp.Extensions
@@ -37,7 +37,7 @@ namespace Blog2024ApiApp.Extensions
             services.AddTransient<BlogsDataService>();
             services.AddTransient<PostsDataService>();
             //configure MailSettings
-            services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
+            services.Configure<MailSettingsDTO>(configuration.GetSection("MailSettings"));
 
             // Configure form options
             services.Configure<FormOptions>(options =>

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Blog2024ApiApp.Data.Repositories.Interfaces;
-using Blog2024ApiApp.ViewModels;
+using Blog2024ApiApp.DTO;
 
 namespace Blog2024ApiApp.Data.Repositories
 {
@@ -15,11 +15,11 @@ namespace Blog2024ApiApp.Data.Repositories
         #endregion
 
         #region GET ALL USERS
-        public async Task<IEnumerable<UserViewModel?>> GetAllUsersAsync()
+        public async Task<IEnumerable<UserDTO?>> GetAllUsersAsync()
         {
 
             var users = _context.Users
-                                             .Select(u => new UserViewModel
+                                             .Select(u => new UserDTO
                                              {
                                                  Id = u.Id,              // Access the Id from ApplicationUser
                                                  FullName = u.FullName    // Access the FullName from ApplicationUser
@@ -35,12 +35,12 @@ namespace Blog2024ApiApp.Data.Repositories
         /// Therefore, GetUserByIdAsync has a string id parameter)
         /// </summary>
 
-        public async Task<UserViewModel?> GetUserByIdAsync(string id)
+        public async Task<UserDTO?> GetUserByIdAsync(string id)
         {
             // Await the result and store it in a variable
             var user = await _context.Users
                                      .Where(x => x.Id == id)
-                                     .Select(x => new UserViewModel
+                                     .Select(x => new UserDTO
                                      {
                                          Id = x.Id,
                                          FullName = x.FullName
@@ -58,11 +58,11 @@ namespace Blog2024ApiApp.Data.Repositories
         #endregion
 
     #region GET ALL MODERATORS
-        public async Task<IEnumerable<UserViewModel?>> GetAllModeratorsAsync()
+        public async Task<IEnumerable<UserDTO?>> GetAllModeratorsAsync()
         {
             var moderators = _context.Comments
                 .Where(c => c.Moderator != null)
-                .Select(c => new UserViewModel
+                .Select(c => new UserDTO
                 {
                     Id = c.Moderator!.Id,
                     FullName = c.Moderator!.FullName
@@ -74,13 +74,13 @@ namespace Blog2024ApiApp.Data.Repositories
         #endregion
 
  #region GET MODERATOR BY ID/FULL NAME
-        public async Task<UserViewModel?> GetModeratorByIdAsync(string id)
+        public async Task<UserDTO?> GetModeratorByIdAsync(string id)
 
         {
            var moderator = await _context.Users
                                     //joining Comments 
                                     .Where(u => _context.Comments.Any(c => c.ModeratorId == u.Id && u.Id == id))
-                                    .Select(u => new UserViewModel
+                                    .Select(u => new UserDTO
                                     {
                                         Id = u.Id,
                                         FullName = u.FullName 
@@ -100,7 +100,7 @@ namespace Blog2024ApiApp.Data.Repositories
 
     #region GET ALL AUTHORS
         //pulls both BLOG & POST Authors
-        public async Task<IEnumerable<UserViewModel?>> GetAllAuthorsAsync()
+        public async Task<IEnumerable<UserDTO?>> GetAllAuthorsAsync()
         {
             var blogAuthors = await GetAllBlogAuthorsAsync();
 
@@ -113,11 +113,11 @@ namespace Blog2024ApiApp.Data.Repositories
         #endregion
 
         #region GET ALL BLOG AUTHORS
-        public async Task<IEnumerable<UserViewModel?>> GetAllBlogAuthorsAsync()
+        public async Task<IEnumerable<UserDTO?>> GetAllBlogAuthorsAsync()
         {
             var blogAuthors = _context.Blogs
                 .Where(b => b.Author != null)
-                .Select(p => new UserViewModel
+                .Select(p => new UserDTO
                 {
                     Id = p.Author!.Id,
                     FullName = p.Author!.FullName
@@ -130,11 +130,11 @@ namespace Blog2024ApiApp.Data.Repositories
         #endregion
 
         #region GET ALL POST AUTHORS
-        public async Task<IEnumerable<UserViewModel?>> GetAllPostAuthorsAsync()
+        public async Task<IEnumerable<UserDTO?>> GetAllPostAuthorsAsync()
         {
             var postAuthors = _context.Posts
                 .Where(p => p.Author != null)
-                .Select(p => new UserViewModel
+                .Select(p => new UserDTO
                 {
                     Id = p.Author!.Id,            
                     FullName = p.Author!.FullName  
@@ -146,7 +146,7 @@ namespace Blog2024ApiApp.Data.Repositories
         #endregion
         
 #region GET AUTHOR BY ID
-        public async Task<UserViewModel?> GetAuthorByIdAsync(string id)
+        public async Task<UserDTO?> GetAuthorByIdAsync(string id)
         {
             // Search for the author in Blogs
             var blogAuthor = await GetBlogAuthorByIdAsync(id);
@@ -161,12 +161,12 @@ namespace Blog2024ApiApp.Data.Repositories
         #endregion
 
         #region GET BLOG AUTHOR BY ID
-        public async Task<UserViewModel?> GetBlogAuthorByIdAsync(string id)
+        public async Task<UserDTO?> GetBlogAuthorByIdAsync(string id)
         {
                 // Search for the author in Blogs
             var blogAuthor = await _context.Blogs
                 .Where(b => b.Author != null && b.Author.Id == id)
-                .Select(b => new UserViewModel
+                .Select(b => new UserDTO
                 {
                     Id = b.Author!.Id,
                     FullName = b.Author!.FullName
@@ -178,12 +178,12 @@ namespace Blog2024ApiApp.Data.Repositories
         #endregion
 
         #region GET POST AUTHOR BY ID
-        public async Task<UserViewModel?> GetPostAuthorByIdAsync(string id)
+        public async Task<UserDTO?> GetPostAuthorByIdAsync(string id)
         {
             //search for the author in Posts
             var postAuthor = await _context.Posts
                 .Where(p => p.Author != null && p.Author.Id == id)
-                .Select(p => new UserViewModel
+                .Select(p => new UserDTO
                 {
                     Id = p.Author!.Id,
                     FullName = p.Author!.FullName
@@ -194,12 +194,12 @@ namespace Blog2024ApiApp.Data.Repositories
         #endregion
 
         #region GET ALL ADMINISTRATORS
-        public async Task<IEnumerable<UserViewModel?>> GetAllAdministratorsAsync()
+        public async Task<IEnumerable<UserDTO?>> GetAllAdministratorsAsync()
         {
             var usersInRole = await _userManager.GetUsersInRoleAsync("Administrator");
 
             var administrators = usersInRole
-                .Select(u => new UserViewModel
+                .Select(u => new UserDTO
                 {
                     Id = u.Id,
                     FullName = u.FullName 
@@ -211,13 +211,13 @@ namespace Blog2024ApiApp.Data.Repositories
         #endregion
 
         #region GET ADMINISTRATOR BY ID/FULL NAME
-        public async Task<UserViewModel?> GetAdministratorByIdAsync(string id)
+        public async Task<UserDTO?> GetAdministratorByIdAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
 
             if (user != null && await _userManager.IsInRoleAsync(user, "Administrator"))
             {
-                return new UserViewModel
+                return new UserDTO
                 {
                     Id = user.Id,
                     FullName = user.FullName 

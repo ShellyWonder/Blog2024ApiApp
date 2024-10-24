@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Blog2024ApiApp.Enums;
 using Blog2024ApiApp.Models;
 using Blog2024ApiApp.Services.Interfaces;
-using Blog2024ApiApp.ViewModels;
+using Blog2024ApiApp.DTO;
 
 namespace Blog2024ApiApp.Controllers
 {

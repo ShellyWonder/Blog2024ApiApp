@@ -1,6 +1,6 @@
-﻿namespace Blog2024ApiApp.ViewModels
+﻿namespace Blog2024ApiApp.DTO
 {
-    public class MailSettings
+    public class MailSettingsDTO
     {
         //Configuration & use of smtp gmail server
         public string? Mail {  get; set; }

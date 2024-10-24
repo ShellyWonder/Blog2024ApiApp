@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Blog2024ApiApp.ViewModels
-{
-    public class ContactUs
+namespace Blog2024ApiApp.DTO
+    {
+    public class ContactUsDTO
     {
         public required string Name { get; set; }
 

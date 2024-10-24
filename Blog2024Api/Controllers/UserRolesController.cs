@@ -6,7 +6,7 @@ using Blog2024ApiApp.Data;
 using Blog2024ApiApp.Enums;
 using Blog2024ApiApp.Services;
 using Blog2024ApiApp.Services.Interfaces;
-using Blog2024ApiApp.ViewModels;
+using Blog2024Api.DTO;
 
 
 namespace Blog2024ApiApp.Controllers
@@ -29,14 +29,14 @@ namespace Blog2024ApiApp.Controllers
         public async Task<IActionResult> ManageUserRoles()
         {
             //add instance of the view model
-            List<ManageUserRolesViewModel> model = new();
+            List<ManageUserRolesDTO> model = new();
 
             //Get list of all users
             List<ApplicationUser> users = (List<ApplicationUser>)await _applicationUserService.GetAllUsersAsync();
 
             foreach (ApplicationUser user in users)
             {
-                ManageUserRolesViewModel viewModel = new();
+                ManageUserRolesDTO viewModel = new();
                 viewModel.ApplicationUser = user;
                 IEnumerable<string>selected = await _rolesService.GetUserRolesAsync(user);
                 viewModel.Roles = new MultiSelectList( await _rolesService.GetRolesAsync(),"Name", "Name", selected);
@@ -52,7 +52,7 @@ namespace Blog2024ApiApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         
-        public async Task<IActionResult> ManageUserRoles(ManageUserRolesViewModel model)
+        public async Task<IActionResult> ManageUserRoles(ManageUserRolesDTO model)
         {
             ApplicationUser user = await _userManager.FindByIdAsync(model.ApplicationUser.Id);
             if (user == null)

@@ -3,7 +3,7 @@ using Blog2024ApiApp.Data.Repositories.Interfaces;
 using Blog2024ApiApp.Enums;
 using Blog2024ApiApp.Models;
 using Blog2024ApiApp.Services.Interfaces;
-using Blog2024ApiApp.ViewModels;
+using Blog2024ApiApp.DTO;
 using X.PagedList;
 using X.PagedList.EF;
 
@@ -64,14 +64,14 @@ namespace Blog2024ApiApp.Services
         #endregion
 
 #region GET ALL BLOG AUTHORS
-        public async Task<IEnumerable<UserViewModel?>> GetAllBlogAuthorsAsync()
+        public async Task<IEnumerable<UserDTO?>> GetAllBlogAuthorsAsync()
         {
             return await _applicationUserService.GetAllBlogAuthorsAsync();
         } 
         #endregion
 
 #region GET ALL AUTHORS
-        public async Task<IEnumerable<UserViewModel?>> GetAllAuthorsAsync()
+        public async Task<IEnumerable<UserDTO?>> GetAllAuthorsAsync()
         {  
             //pulls down both BLOG & POST authors as potential authors of a new blog.
             return await _applicationUserService.GetAllAuthorsAsync();

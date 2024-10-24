@@ -1,7 +1,7 @@
 ﻿using Blog2024ApiApp.Data;
 using Blog2024ApiApp.Data.Repositories.Interfaces;
 using Blog2024ApiApp.Services.Interfaces;
-using Blog2024ApiApp.ViewModels;
+using Blog2024ApiApp.DTO;
 
 namespace Blog2024ApiApp.Services
 {
@@ -12,14 +12,14 @@ namespace Blog2024ApiApp.Services
         #endregion
 
  #region GET ALL USERS 
-        public async Task<IEnumerable<UserViewModel?>> GetAllUsersAsync()
+        public async Task<IEnumerable<UserDTO?>> GetAllUsersAsync()
         {
             return await _applicationUserRepository.GetAllUsersAsync();
         }
         #endregion
 
 #region GET USER BY ID
-        public async Task<UserViewModel?> GetUserByIdAsync(string id)
+        public async Task<UserDTO?> GetUserByIdAsync(string id)
         {
             return await _applicationUserRepository.GetUserByIdAsync(id);
         } 
@@ -27,21 +27,21 @@ namespace Blog2024ApiApp.Services
 
 #region GET ALL AUTHORS
         //pulls authors from both POSTS & BLOGS tables
-        public async Task<IEnumerable<UserViewModel?>> GetAllAuthorsAsync()
+        public async Task<IEnumerable<UserDTO?>> GetAllAuthorsAsync()
         {
             return await _applicationUserRepository.GetAllAuthorsAsync();
         }
         #endregion
 
 #region GET AUTHOR BY ID
-        public async Task<UserViewModel?> GetAuthorByIdAsync(string id)
+        public async Task<UserDTO?> GetAuthorByIdAsync(string id)
         {
             return await _applicationUserRepository.GetAuthorByIdAsync(id);
         }
         #endregion
 
 #region GET BLOG AUTHOR BY ID
-        public async Task<UserViewModel?> GetBlogAuthorByIdAsync(string id)
+        public async Task<UserDTO?> GetBlogAuthorByIdAsync(string id)
         {
             return await _applicationUserRepository.GetBlogAuthorByIdAsync(id);
         }
@@ -49,7 +49,7 @@ namespace Blog2024ApiApp.Services
         #endregion
 
 #region GET POST AUTHOR BY ID 
-        public async Task<UserViewModel?> GetPostAuthorByIdAsync(string id)
+        public async Task<UserDTO?> GetPostAuthorByIdAsync(string id)
         {
             return await _applicationUserRepository.GetPostAuthorByIdAsync(id);
         }
@@ -57,14 +57,14 @@ namespace Blog2024ApiApp.Services
         #endregion
 
 #region GET ALL ADMINISTRATORS
-        public async Task<IEnumerable<UserViewModel?>> GetAllAdministratorsAsync()
+        public async Task<IEnumerable<UserDTO?>> GetAllAdministratorsAsync()
         {
             return await _applicationUserRepository.GetAllAdministratorsAsync();
         }
         #endregion
 
 #region GET ADMINISTRATOR BY ID
-        public async Task<UserViewModel?> GetAdministratorByIdAsync(string id)
+        public async Task<UserDTO?> GetAdministratorByIdAsync(string id)
         {
             return await _applicationUserRepository.GetAdministratorByIdAsync(id);
         } 
@@ -72,7 +72,7 @@ namespace Blog2024ApiApp.Services
 
 #region GET ALL BLOG AUTHORS
         //pulls authors from BLOGS tables
-        public async Task<IEnumerable<UserViewModel?>> GetAllBlogAuthorsAsync()
+        public async Task<IEnumerable<UserDTO?>> GetAllBlogAuthorsAsync()
         {
             return await _applicationUserRepository.GetAllBlogAuthorsAsync();
         } 
@@ -80,21 +80,21 @@ namespace Blog2024ApiApp.Services
          
  #region GET ALL POST AUTHORS
         //pulls authors from both POSTS 
-        public async Task<IEnumerable<UserViewModel?>> GetAllPostAuthorsAsync()
+        public async Task<IEnumerable<UserDTO?>> GetAllPostAuthorsAsync()
         {
             return await _applicationUserRepository.GetAllPostAuthorsAsync();
         }
         #endregion
 
 #region GET ALL MODERATORS
-        public async Task<IEnumerable<UserViewModel?>> GetAllModeratorsAsync()
+        public async Task<IEnumerable<UserDTO?>> GetAllModeratorsAsync()
         {
             return await _applicationUserRepository.GetAllModeratorsAsync();
         }
         #endregion
 
 #region GET MODERATOR BY ID
-        public async Task<UserViewModel?> GetModeratorByIdAsync(string id)
+        public async Task<UserDTO?> GetModeratorByIdAsync(string id)
         {
             return await _applicationUserRepository.GetModeratorByIdAsync(id);
         }

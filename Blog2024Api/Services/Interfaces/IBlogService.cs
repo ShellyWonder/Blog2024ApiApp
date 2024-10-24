@@ -1,7 +1,7 @@
 ﻿using Blog2024ApiApp.Data;
 using Blog2024ApiApp.Enums;
 using Blog2024ApiApp.Models;
-using Blog2024ApiApp.ViewModels;
+using Blog2024ApiApp.DTO;
 using X.PagedList;
 
 namespace Blog2024ApiApp.Services.Interfaces
@@ -15,8 +15,8 @@ namespace Blog2024ApiApp.Services.Interfaces
         Task UpdateBlogAsync(Blog blog, string userId);
         Task DeleteBlogAsync(int id);
         Task<bool> BlogExistsAsync(int id);
-        Task<IEnumerable<UserViewModel?>> GetAllBlogAuthorsAsync();
-        Task<IEnumerable<UserViewModel?>> GetAllAuthorsAsync();
+        Task<IEnumerable<UserDTO?>> GetAllBlogAuthorsAsync();
+        Task<IEnumerable<UserDTO?>> GetAllAuthorsAsync();
 
 
 
