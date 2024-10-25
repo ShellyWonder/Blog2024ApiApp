@@ -1,19 +1,23 @@
 ﻿using Blog2024ApiApp.Data.Repositories.Interfaces;
 using Blog2024ApiApp.Enums;
 using Blog2024ApiApp.Models;
-using X.PagedList;
-using X.PagedList.EF;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blog2024ApiApp.Data.Repositories
 {
 
-    public class SearchRepository(ApplicationDbContext context) : ISearchRepository
+    public class SearchRepository : ISearchRepository
     {
-        private readonly ApplicationDbContext _context = context;
+        private readonly ApplicationDbContext _context;
 
-        public async Task<IPagedList<Post>> SearchPostsByStateAsync(PostState postState, int pageNumber, int pageSize, string searchTerm)
+        public SearchRepository(ApplicationDbContext context)
         {
-            var posts = _context.Posts.Where(p => p.BlogPostState == postState);
+            _context = context;
+        }
+
+        public async Task<List<Post>> SearchPostsByStateAsync(PostState postState, int pageNumber, int pageSize, string searchTerm)
+        {
+            var posts = _context.Posts.Where(p => p.BlogPostState == PostState.ProductionReady);
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
@@ -33,8 +37,18 @@ namespace Blog2024ApiApp.Data.Repositories
             }
 
             return await posts.OrderByDescending(p => p.Created)
-                              .ToPagedListAsync(pageNumber, pageSize);
+                                                .Skip((pageNumber - 1) * pageSize)
+                                                .Take(pageSize)
+                                                .ToListAsync();
         }
-
+        public async Task<int> GetTotalCountAsync(PostState postState, string searchTerm)
+        {
+            return await _context.Posts
+                .Where(post => post.BlogPostState == PostState.ProductionReady &&
+                                   (string.IsNullOrEmpty(searchTerm) 
+                                   || post.Title.Contains(searchTerm) 
+                                   || post.Content!.Contains(searchTerm)))
+                .CountAsync();
+        }
     }
 }

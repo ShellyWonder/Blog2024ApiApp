@@ -2,22 +2,28 @@
 using Blog2024ApiApp.Enums;
 using Blog2024ApiApp.Models;
 using Blog2024ApiApp.Services.Interfaces;
-using PagedList;
-using X.PagedList;
 
 namespace Blog2024ApiApp.Services
 {
-#region PRIMARY CONSTRUCTOR
-    public class SearchService(ISearchRepository searchRepository) : ISearchService
+    public class SearchService : ISearchService
     {
-        private readonly ISearchRepository _searchRepository = searchRepository; 
-        #endregion
+        private readonly ISearchRepository _searchRepository;
 
-        #region SEARCH POSTS
-        public async Task<PagedList.IPagedList<Post>> SearchPosts(PostState postState, int pageNumber, int pageSize, string searchTerm)
+        public SearchService(ISearchRepository searchRepository)
         {
-            return (PagedList.IPagedList<Post>)await _searchRepository.SearchPostsByStateAsync(postState, pageNumber, pageSize, searchTerm);
-        } 
-        #endregion
+            _searchRepository = searchRepository;
+        }
+
+        public async Task<(List<Post> Posts, int TotalCount)> SearchPostsAsync(
+            PostState postState, int pageNumber, int pageSize, string searchTerm)
+        {
+            // Fetch the paged data and the total count from the repository.
+            var posts = await _searchRepository.SearchPostsByStateAsync(postState, pageNumber, pageSize, searchTerm);
+            var totalCount = await _searchRepository.GetTotalCountAsync(postState, searchTerm);
+
+            return (posts, totalCount);
+        }
+        
     }
 }
+

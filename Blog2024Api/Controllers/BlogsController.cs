@@ -1,179 +1,117 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Blog2024ApiApp.Data;
 using Blog2024ApiApp.Models;
 using Blog2024ApiApp.Services.Interfaces;
 
 namespace Blog2024ApiApp.Controllers
 {
-    #region PRIMARY CONSTRUCTOR
-    public class BlogsController(IBlogService blogService,
-                 UserManager<ApplicationUser> userManager,
-                 IErrorHandlingService errorHandlingService,
-                 IImageService imageService) : Controller
-    {
-        private readonly IBlogService _blogService = blogService;
-        private readonly UserManager<ApplicationUser> _userManager = userManager;
-        private readonly IErrorHandlingService _errorHandlingService = errorHandlingService;
-        private readonly IImageService _imageService = imageService;
-        #endregion
 
-        #region GET BLOGS INDEX
+    [Route("api/[Controller]")]
+    [ApiController]
+    public class BlogsController : ControllerBase
+    {
+        private readonly IBlogService _blogService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IImageService _imageService;
+
+        public BlogsController(IBlogService blogService, UserManager<ApplicationUser> userManager, IImageService imageService)
+        {
+            _blogService = blogService;
+            _userManager = userManager;
+            _imageService = imageService;
+        }
+      
+        #region GET All BLOGS INDEX
+        [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public async Task<ActionResult<IEnumerable<Blog>>> GetAllBlogs()
         {
             var blogs = await _blogService.GetAllBlogsAsync();
-            return View(blogs);
+            return Ok(blogs);
         }
         #endregion
 
-        #region GET BLOG DETAILS
+        #region GET SINGLE BLOG DETAILS
+        // GET: api/Blogs/{id}
+        [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> Details(int? id)
+        public async Task<ActionResult<Blog>>Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var blog = await _blogService.GetBlogByIdAsync(id.Value);
+            var blog = await _blogService.GetBlogByIdAsync(id!.Value);
+            
             if (blog == null)
             {
-                return NotFound();
+                return NotFound(new { message = $"Blog with ID {id} was not found." });
             }
 
-            return View(blog);
+            return Ok(blog);
         }
         #endregion
 
-        #region GET BLOG CREATE
-        [Authorize(Roles = "Administrator,Author")]
-        public IActionResult Create()
-        {
-
-            return View();
-        }
-        #endregion
-
-        #region POST CREATE
+        #region POST BLOG CREATE
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        //When component is created, replace Image in bind appropriately
-        public async Task<IActionResult> Create([Bind("Name,Description,ImageFile")] Blog blog)
-        {
-            if (ModelState.IsValid)
-            {
-                // Get the current user ID
-                var userId = _userManager.GetUserId(User);
-
-                // Convert the uploaded image to a byte array and the image data
-                blog = await ImageImplementationAsync(blog);
-
-                // Pass  blog and userId to the service/repository
-                await _blogService.CreateBlogAsync(blog, userId!);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(blog);
-        }
-        #endregion
-
-        #region GET EDIT
         [Authorize(Roles = "Administrator,Author")]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<ActionResult<Blog>>BlogCreate([FromForm]Blog blog)
         {
-            if (id == null)
-            {
-                return _errorHandlingService.HandleError($"Blog with ID {id} was not found.");
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+           
+            var userId = _userManager.GetUserId(User);
+            
+            if (userId is null) return NotFound(new { message = $"User Id {userId} is not found." });
 
-            var blog = await _blogService.GetBlogByIdAsync(id.Value);
-            if (blog == null)
-            {
-                return _errorHandlingService.HandleError($"Blog with ID {id} was not found.");
-            }
-            return View(blog);
+            blog = await ImageImplementationAsync(blog);
+
+            await _blogService.CreateBlogAsync(blog, userId);
+            return CreatedAtAction(nameof(Details), new {id = blog.Id}, blog);
         }
         #endregion
 
-        #region POST EDIT
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Blog blog, IFormFile newImage)
+        #region PUT EDIT
+        // PUT: api/Blogs/{id}
+        [HttpPut ("{id}")]
+        [Authorize (Roles="Administrator, Author")]
+        public async Task<IActionResult> BlogUpdate(int id, [FromForm] Blog blog, IFormFile newImage)
         {
-            if (id != blog.Id)
+            if (id != blog.Id) return NotFound(new { message = $"Mismatched Blog ID." });
+      
+            if (!ModelState.IsValid) return NotFound(ModelState);
+            
+            var existingBlog = await _blogService.GetBlogByIdAsync(id);
+            
+            if (existingBlog == null) return NotFound(new { message = $"Blog with ID {id} was not found." });
+
+            existingBlog.Name = blog.Name;
+            existingBlog.Description = blog.Description;
+
+            if (newImage != null)
             {
-                return _errorHandlingService.HandleError($"Blog with ID {blog.Id} was not found.");
+                existingBlog.ImageFile = newImage;
+                existingBlog = await ImageImplementationAsync(existingBlog);
             }
 
-            if (ModelState.IsValid)
-            {
-
-                try
-                {
-                    // Get the current user ID
-                    var userId = _userManager.GetUserId(User);
-
-                    // Get the current blog ID
-                    var newBlog = await _blogService.GetBlogByIdAsync(blog.Id);
-
-                    if (newBlog!.Name != blog.Name) newBlog.Name = blog.Name;
-
-                    if (newBlog!.Description != blog.Description) newBlog.Description = blog.Description;
-
-                    if (newBlog!.Name != blog.Name) newBlog.Name = blog.Name;
-
-
-                    // Check if a new image has been uploaded
-                    if (newImage != null)
-                    {
-                        // Assign the new image to the ImageFile property of the Blog object
-                        newBlog.ImageFile = newImage;
-                        // Convert the uploaded image to a byte array and store it in the database
-                        blog = await ImageImplementationAsync(newBlog);
-                    }
-                    // Pass userId to the service/repository to update the rest of the blog
-                    await _blogService.UpdateBlogAsync(blog, userId!);
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (KeyNotFoundException)
-                {
-
-                    return _errorHandlingService.HandleError($"Blog with ID {blog.Id} was not found.");
-                }
-
-            }
-            return View(blog);
+            var userId = _userManager.GetUserId(User);
+            
+            if (userId is null) return NotFound(new { message = $"User Id {userId} is not found." });
+            
+            await _blogService.UpdateBlogAsync(existingBlog, userId);
+            return NoContent();
         }
         #endregion
 
-        #region GET DELETE
+        #region DELETE
+        // DELETE: api/Blogs/{id}
+        [HttpDelete("{id}")]
         [Authorize(Roles = "Administrator,Author")]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> DeleteBlog(int id)
         {
-            if (id == null)
-            {
-                return _errorHandlingService.HandleError($"Blog with ID {id} was not found.");
-            }
+            var blogExists = await _blogService.BlogExistsAsync(id);
+             
+            if (!blogExists) return NotFound(new { message = $"Blog with ID {id} was not found." });
 
-            var blog = await _blogService.GetBlogByIdAsync(id.Value);
-            if (blog == null)
-            {
-                return _errorHandlingService.HandleError($"Blog with ID {id} was not found.");
-            }
-
-            return View(blog);
-        }
-        #endregion
-
-        #region POST DELETE
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
             await _blogService.DeleteBlogAsync(id);
-            return RedirectToAction(nameof(Index));
+            return NoContent();
         }
         #endregion
 
@@ -181,14 +119,6 @@ namespace Blog2024ApiApp.Controllers
         private async Task<bool> BlogExists(int id)
         {
             return await _blogService.BlogExistsAsync(id);
-        }
-        #endregion
-
-        #region POPULATE AUTHORS
-        private async Task PopulateAuthorsDropDownList(object? selectedAuthor = null)
-        {
-            var authors = await _blogService.GetAllAuthorsAsync();
-            ViewData["AuthorId"] = new SelectList(authors, "Id", "FullName", selectedAuthor);
         }
         #endregion
 
@@ -210,7 +140,5 @@ namespace Blog2024ApiApp.Controllers
             return blog;
         }
         #endregion
-
-        
     }
 }
