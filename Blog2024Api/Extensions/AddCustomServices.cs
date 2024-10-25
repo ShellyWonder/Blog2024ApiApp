@@ -26,7 +26,7 @@ namespace Blog2024ApiApp.Extensions
             
             services.AddScoped<IBlogEmailSender, EmailSender>();
             services.AddScoped<IImageService, ImageService>();
-            services.AddScoped<IErrorHandlingService, ErrorHandlingService>();
+            
 
             services.AddScoped<ISlugRepository, SlugRepository>();
             services.AddScoped<ISlugService, SlugService>();
