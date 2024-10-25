@@ -9,11 +9,14 @@ namespace Blog2024ApiApp.Services
     {
         private readonly ISearchRepository _searchRepository;
 
+        #region CONSTRUCTOR
         public SearchService(ISearchRepository searchRepository)
         {
             _searchRepository = searchRepository;
         }
+        #endregion
 
+        #region SEARCH POSTS
         public async Task<(List<Post> Posts, int TotalCount)> SearchPostsAsync(
             PostState postState, int pageNumber, int pageSize, string searchTerm)
         {
@@ -23,7 +26,8 @@ namespace Blog2024ApiApp.Services
 
             return (posts, totalCount);
         }
-        
-    }
+
+    } 
+    #endregion
 }
 
