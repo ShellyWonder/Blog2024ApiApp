@@ -6,198 +6,156 @@ using Microsoft.EntityFrameworkCore;
 using Blog2024ApiApp.Data;
 using Blog2024ApiApp.Models;
 using Blog2024ApiApp.Services.Interfaces;
+using System.Reflection.Metadata;
 
 namespace Blog2024ApiApp.Controllers
 {
-    #region PRIMARY CONSTRUCTOR
-    public class CommentsController(ICommentService commentService,
-                              IApplicationUserService applicationUserService,
-                              UserManager<ApplicationUser> userManager,
-                              IPostService postService,
-                              IErrorHandlingService errorHandlingService) : Controller
+    [Route("api/[Controller]")]
+    [ApiController]
+    public class CommentsController : ControllerBase
     {
-        private readonly ICommentService _commentService = commentService;
-        private readonly IApplicationUserService _applicationUserService = applicationUserService;
-        private readonly UserManager<ApplicationUser> _userManager = userManager;
-        private readonly IPostService _postService = postService;
-        private readonly IErrorHandlingService _errorHandlingService = errorHandlingService;
+        private readonly ICommentService _commentService;
+        private readonly IApplicationUserService _applicationUserService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IPostService _postService;
+
+        #region CONSTRUCTOR
+        public CommentsController(ICommentService commentService,
+                                  IApplicationUserService applicationUserService,
+                                  UserManager<ApplicationUser> userManager,
+                                  IPostService postService)
+                                  
+        {
+            _commentService = commentService;
+            _applicationUserService = applicationUserService;
+            _userManager = userManager;
+            _postService = postService;
+        }
         #endregion
 
         #region GET COMMENTS
-        [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        [Authorize(Roles ="Moderator, Administrator")]
+        public async Task<IActionResult> GetAllComments()
         {
-            return View(await _commentService.GetAllCommentsAsync());
+           var comments = await _commentService.GetAllCommentsAsync();
+            return Ok(comments);
         }
         #endregion
 
         #region GET DETAILS
-        [AllowAnonymous]
+        // GET: api/Blogs/{id}
+        [HttpGet("{id}")]
+        [Authorize(Roles ="Moderator, Commentator, Administrator")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return NotFound((new { message = $"Comment with ID {id} was not found." }));
             }
 
             var comment = await _commentService.GetCommentByIdAsync(id.Value);
             if (comment == null)
             {
-                return NotFound();
+                return NotFound((new { message = $"Comment with ID {id} was not found." }));
             }
 
-            return View(comment);
+            return Ok(comment);
         }
         #endregion
 
-        #region GET CREATE
-        [Authorize(Roles = "Commentator")]
-        public async Task<IActionResult> Create()
-        {
-            await PopulateSelectLists();
-            return View();
-        }
-        #endregion
-
-        #region POST CREATE
+        #region POST COMMENT CREATE
         //NOTE: comment author = Commentator
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PostId,Body")]Comment comment)
+        [Authorize(Roles = "Commentator")]
+        public async Task<ActionResult<Comment>> Create([FromForm]Comment comment)
         {
-            if (ModelState.IsValid)
-            {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            
                 // Capture the user's ID and assign it to the CommentatorId
                 comment.CommentatorId = _userManager.GetUserId(User);
                 comment.Created = DateTime.Now;
                 await _commentService.CreateCommentAsync(comment);
-                return RedirectToAction(nameof(Index));
-            }
-            await PopulateSelectLists();
-            return View(comment);
+                return CreatedAtAction(nameof(Details), new { id = comment.Id }, comment);
         }
         #endregion
 
-        #region GET EDIT
-        [Authorize(Roles = "Commentator, Moderator")]
-        public async Task<IActionResult> Edit(int? id)
+        #region COMMENT EDIT/UPDATE
+        // PUT: api/Comments/{id}
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Commentator")]
+        public async Task<IActionResult> CUpdate(int id, [FromBody] Comment comment)
         {
-            if (id == null)
-            {
-                return _errorHandlingService.HandleError($"Comment with ID {id} was not found.");
-            }
+            if (id != comment.Id) return NotFound($"Comment with ID {id} was not found.");
+            
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            
+            var existingComment = await _commentService.GetExistingCommentAsync(id);
 
-            var comment = await _commentService.GetCommentByIdAsync(id.Value);
-            if (comment == null)
+            if (existingComment == null) return NotFound($"Comment with ID {id} was not found.");
+            
+            try
             {
-                return _errorHandlingService.HandleError($"Comment with ID {id} was not found.");
-            }
-            await PopulateSelectLists();
-            return View(comment);
-        }
-        #endregion
-
-        #region POST EDIT
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Body")] Comment comment)
-        {
-            if (id != comment.Id)
-            {
-                return _errorHandlingService.HandleError($"Comment with ID {id} was not found.");
-            }
-
-            if (ModelState.IsValid)
-            {
-                var existingComment = await _commentService.GetExistingCommentAsync(id);
-                if (existingComment == null)
-                {
-                    return _errorHandlingService.HandleError($"Comment with ID {id} was not found.");
-                }
-                try
-                {
-                    existingComment!.Body = comment.Body;
-                    existingComment.Updated = DateTime.Now;
-                    await _commentService.UpdateCommentAsync(comment);
+                existingComment!.Body = comment.Body;
+                existingComment.Updated = DateTime.Now;
+                await _commentService.UpdateCommentAsync(comment);
                    
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await CommentExists(comment.Id))
-                    {
-                        return _errorHandlingService.HandleError($"Comment with ID {id} was not found.");
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction("Details", "Posts", new { slug = existingComment.Post!.Slug }, "commentSection");
             }
-            await PopulateSelectLists();
-            return View(comment);
-        }
-        #endregion
-
-        #region POST MODERATE
-        [Authorize(Roles ="Moderator")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Moderate(int id, [Bind("Id,Body,ModeratedBody, ModerationReason")] Comment comment)
-        {
-            if (id != comment.Id)
+            catch (DbUpdateConcurrencyException)
             {
-                return _errorHandlingService.HandleError($"Comment with ID {id} was not found.");
-            }
-            if (ModelState.IsValid)
-            {
-                var existingComment = await _commentService.GetExistingCommentAsync(id);
-                try
+                if (!await CommentExists(comment.Id))
                 {
-                    existingComment!.ModeratedBody = comment.ModeratedBody;
-                    existingComment!.ModerationReason = comment.ModerationReason;
-
-                    existingComment.Moderated = DateTime.Now;
-                    existingComment!.ModeratorId = _userManager.GetUserId(User);
+                    return NotFound($"Comment with ID {id} was not found.");
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-
                     throw;
                 }
-
-                return RedirectToAction("Details", "Posts", new { slug = existingComment.Post!.Slug }, "commentSection");
             }
-            return View(comment);
-        }
-            #endregion
-
-        #region GET DELETE
-            [Authorize(Roles ="Moderator, Commentator")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return _errorHandlingService.HandleError($"Comment with ID {id} was not found.");
-            }
-
-            var comment = await _commentService.GetCommentByIdAsync(id.Value);
-            if (comment == null)
-            {
-                return _errorHandlingService.HandleError($"Comment with ID {id} was not found.");
-            }
-
-            return View(comment);
+            return NoContent();
+           
         }
         #endregion
 
-        #region POST DELETE        
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id, string slug)
+        #region COMMENT MODERATE/UPDATE
+        [HttpPut("{id}/moderate")]
+        [Authorize(Roles ="Moderator,Administrator")]
+        public async Task<IActionResult> Moderate(int id, [FromBody] Comment comment)
+        {
+            if (id != comment.Id) return NotFound(new { message = $"Comment with ID {id} was not found." });
+            
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            
+            var existingComment = await _commentService.GetExistingCommentAsync(id);
+
+            if (existingComment == null) return NotFound(new { message = "Comment does not exist." });
+            
+            try
+            {
+                existingComment!.ModeratedBody = comment.ModeratedBody;
+                existingComment!.ModerationReason = comment.ModerationReason;
+
+                existingComment.Moderated = DateTime.Now;
+                existingComment!.ModeratorId = _userManager.GetUserId(User);
+                await _commentService.UpdateCommentAsync(comment);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while updating the comment." });
+            }
+            return Ok(new { message = "Comment successfully moderated." });
+        }
+        #endregion
+
+        #region COMMENT DELETE        
+        // DELETE: api/Comments/{id}/{slug}
+        [HttpDelete("{id}/{slug}")]
+        [Authorize(Roles = "Moderator, Commentator, Administrator")]
+        public async Task<IActionResult> Delete(int id, string slug)
         {
             await _commentService.DeleteCommentAsync(id);
-            return RedirectToAction("Details", "Posts", new { slug }, "commentSection");
+            return NoContent();
         }
         #endregion
 
@@ -205,22 +163,6 @@ namespace Blog2024ApiApp.Controllers
         private async Task<bool> CommentExists(int id)
         {
             return await _commentService.CommentExistsAsync(id);
-        }
-        #endregion
-
-        #region POPULATE SELECT LISTS
-        private async Task PopulateSelectLists(Comment? comment = null)
-        {
-            //NOTE: CHANGE VAR DEFINITIONS WHEN ROLES ARE IMPLEMENTED
-            var authors = await _applicationUserService.GetAllUsersAsync();
-            var moderators = await _applicationUserService.GetAllUsersAsync();
-            var commentators = await _applicationUserService.GetAllUsersAsync();
-            var posts = await _postService.GetAllPostsAsync();
-
-            ViewData["CommentatorId"] = new SelectList(commentators, "Id", "Id", comment?.CommentatorId);
-            ViewData["AuthorId"] = new SelectList(authors, "Id", "Id", comment?.AuthorId);
-            ViewData["ModeratorId"] = new SelectList(moderators, "Id", "Id", comment?.ModeratorId);
-            ViewData["PostId"] = new SelectList(posts, "Id", "Id", comment?.PostId);
         }
         #endregion
     }

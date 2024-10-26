@@ -76,7 +76,7 @@ namespace Blog2024ApiApp.Controllers
         {
             if (id != blog.Id) return NotFound(new { message = $"Mismatched Blog ID." });
       
-            if (!ModelState.IsValid) return NotFound(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             
             var existingBlog = await _blogService.GetBlogByIdAsync(id);
             
