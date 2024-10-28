@@ -75,6 +75,19 @@ if (app.Environment.IsDevelopment())
     app.UseMigrationsEndPoint();
 }
 
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        context.Response.ContentType = "application/json";
+
+        var errorResponse = new { message = "An unexpected error occurred." };
+        await context.Response.WriteAsJsonAsync(errorResponse);
+    });
+});
+
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
