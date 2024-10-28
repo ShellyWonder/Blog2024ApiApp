@@ -1,4 +1,6 @@
-﻿using Blog2024ApiApp.Services.Interfaces;
+﻿using Blog2024Api.Services.Interfaces;
+using Blog2024ApiApp.Models;
+using Blog2024ApiApp.Services.Interfaces;
 
 namespace Blog2024ApiApp.Services
 {
@@ -38,10 +40,29 @@ namespace Blog2024ApiApp.Services
         public string GetFileType(IFormFile file)
         {
             return file.ContentType;
-        } 
+        }
         #endregion
 
-    #region MANAGE FILE SIZE
+        #region IMG IMPLEMENTATION
+        public async Task<T> SetImageAsync<T>(T entity) where T : IImageEntity 
+        {
+            if (entity.ImageFile != null)
+            {    //Convert incoming file into a byte array
+                entity.ImageData = await ConvertFileToByteArrayAsync(entity.ImageFile);
+                entity.ImageType = entity.ImageFile.ContentType;
+            }
+            else
+            {
+                // Assign default image if no image is uploaded
+                var defaultImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "default_icon.png");
+                entity.ImageData = await System.IO.File.ReadAllBytesAsync(defaultImagePath);
+                entity.ImageType = "image/png";
+            }
+            return entity;
+        }
+        #endregion
+
+        #region MANAGE FILE SIZE
         public int Size(IFormFile file)
         {
             return Convert.ToInt32(file?.Length);

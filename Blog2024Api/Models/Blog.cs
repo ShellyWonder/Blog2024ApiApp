@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Blog2024Api.Services.Interfaces;
 using Blog2024ApiApp.Data;
 using Blog2024ApiApp.Enums;
 
 namespace Blog2024ApiApp.Models
 {
-    public class Blog
+    public class Blog : IImageEntity
     {
         public int Id { get; set; }
         public string? AuthorId { get; set; }
@@ -26,7 +27,7 @@ namespace Blog2024ApiApp.Models
         public DateTime? Updated { get; set; }
 
         [Display(Name = "Blog Image")]
-        public byte[]? Image { get; set; }
+        public byte[]? ImageData { get; set; }
 
         [Display(Name = "Image Type")]
         public string? ImageType { get; set; }

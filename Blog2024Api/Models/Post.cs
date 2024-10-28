@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Blog2024Api.Services.Interfaces;
 using Blog2024ApiApp.Data;
 using Blog2024ApiApp.Enums;
 
 
 namespace Blog2024ApiApp.Models
 {
-    public class Post
+    public class Post : IImageEntity
     {
         public int Id { get; set; }
         
