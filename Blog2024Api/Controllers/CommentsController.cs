@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Blog2024ApiApp.Data;
 using Blog2024ApiApp.Models;
 using Blog2024ApiApp.Services.Interfaces;
-using System.Reflection.Metadata;
 
 namespace Blog2024ApiApp.Controllers
 {
@@ -84,15 +82,15 @@ namespace Blog2024ApiApp.Controllers
         // PUT: api/Comments/{id}
         [HttpPut("{id}")]
         [Authorize(Roles = "Commentator")]
-        public async Task<IActionResult> CUpdate(int id, [FromBody] Comment comment)
+        public async Task<IActionResult> Update(int id, [FromBody] Comment comment)
         {
-            if (id != comment.Id) return NotFound($"Comment with ID {id} was not found.");
+            if (id != comment.Id) return NotFound(new {message = $"Comment with ID {id} was not found."});
             
             if (!ModelState.IsValid) return BadRequest(ModelState);
             
             var existingComment = await _commentService.GetExistingCommentAsync(id);
 
-            if (existingComment == null) return NotFound($"Comment with ID {id} was not found.");
+            if (existingComment == null) return NotFound(new { message = $"Comment with ID {id} was not found." });
             
             try
             {
@@ -103,9 +101,9 @@ namespace Blog2024ApiApp.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await CommentExists(comment.Id))
+                if (!await _commentService.CommentExistsAsync(comment.Id))
                 {
-                    return NotFound($"Comment with ID {id} was not found.");
+                    return NotFound(new { message = $"Comment with ID {id} was not found." });
                 }
                 else
                 {
@@ -158,12 +156,6 @@ namespace Blog2024ApiApp.Controllers
             return NoContent();
         }
         #endregion
-
-        #region COMMENT EXISTS
-        private async Task<bool> CommentExists(int id)
-        {
-            return await _commentService.CommentExistsAsync(id);
-        }
-        #endregion
+  
     }
 }

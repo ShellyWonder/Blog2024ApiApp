@@ -61,7 +61,7 @@ namespace Blog2024ApiApp.Controllers
             
             if (userId is null) return NotFound(new { message = $"User Id {userId} is not found." });
 
-            blog = await ImageImplementationAsync(blog);
+            blog = await _imageService.SetImageAsync(blog);
 
             await _blogService.CreateBlogAsync(blog, userId);
             return CreatedAtAction(nameof(Details), new {id = blog.Id}, blog);
@@ -88,7 +88,7 @@ namespace Blog2024ApiApp.Controllers
             if (newImage != null)
             {
                 existingBlog.ImageFile = newImage;
-                existingBlog = await ImageImplementationAsync(existingBlog);
+                existingBlog = await _imageService.SetImageAsync(existingBlog);
             }
 
             var userId = _userManager.GetUserId(User);
@@ -115,30 +115,5 @@ namespace Blog2024ApiApp.Controllers
         }
         #endregion
 
-        #region BLOG EXISTS
-        private async Task<bool> BlogExists(int id)
-        {
-            return await _blogService.BlogExistsAsync(id);
-        }
-        #endregion
-
-        #region IMG IMPLEMENTATION
-        private async Task<Blog> ImageImplementationAsync(Blog blog)
-        {
-            if (blog.ImageFile != null)
-            {    //Convert incoming file into a byte array
-                blog.Image = await _imageService.ConvertFileToByteArrayAsync(blog.ImageFile);
-                blog.ImageType = blog.ImageFile.ContentType;
-            }
-            else
-            {
-                // Assign default image if no image is uploaded
-                var defaultImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "default_icon.png");
-                blog.Image = await System.IO.File.ReadAllBytesAsync(defaultImagePath);
-                blog.ImageType = "image/png";
-            }
-            return blog;
-        }
-        #endregion
     }
 }

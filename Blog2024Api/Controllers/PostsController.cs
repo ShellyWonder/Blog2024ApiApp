@@ -8,7 +8,8 @@ using Blog2024ApiApp.Services.Interfaces;
 
 namespace Blog2024ApiApp.Controllers
 {
-
+    [Route("api/[Controller]")]
+    [ApiController]
     public class PostsController : ControllerBase
     {
         private readonly IPostService _postService;
@@ -130,7 +131,7 @@ namespace Blog2024ApiApp.Controllers
 
                     #region IMAGE HANDLING
                     // Convert the uploaded image to a byte array and store it in database
-                    post = await ImageImplementationAsync(post);
+                    post = await _imageService.SetImageAsync(post);
                     #endregion
 
                     #region TAG CREATION AND VALIDATION
@@ -160,7 +161,7 @@ namespace Blog2024ApiApp.Controllers
         #region EDIT/UPDATE
        [HttpPut("{id}")]
         [Authorize(Roles = "Administrator, Author")]
-        public async Task<IActionResult> PostEdit(int id, [FromBody] Post post,
+        public async Task<IActionResult> Update(int id, [FromBody] Post post,
                                                                      IFormFile newImage,
                                                                      List<string>tagValues)
         {
@@ -202,7 +203,7 @@ namespace Blog2024ApiApp.Controllers
                     // Assign the new image to the ImageFile property of the Blog object
                     newPost.ImageFile = newImage;
                     // Convert the uploaded image to a byte array and store it in the database
-                    newPost = await ImageImplementationAsync(newPost);
+                    newPost = await _imageService.SetImageAsync(newPost);
                 }
                 else
                 {
@@ -253,24 +254,7 @@ namespace Blog2024ApiApp.Controllers
         #endregion
 
        
-        #region IMAGE IMPLEMENTATION
-        private async Task<Post> ImageImplementationAsync(Post post)
-        {
-            if (post.ImageFile != null)
-            {
-                post.ImageData = await _imageService.ConvertFileToByteArrayAsync(post.ImageFile);
-                post.ImageType = post.ImageFile.ContentType;
-            }
-            else
-            {
-                // Assign default image if no image is uploaded
-                var defaultImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "default_icon.png");
-                post.ImageData = await System.IO.File.ReadAllBytesAsync(defaultImagePath);
-                post.ImageType = "image/png";
-            }
-            return post;
-        }
-        #endregion
+        
     }
     
 }

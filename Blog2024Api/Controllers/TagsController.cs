@@ -14,18 +14,27 @@ using Blog2024ApiApp.Services.Interfaces;
 
 namespace Blog2024ApiApp.Controllers
 {
-    #region PRIMARY CONSTRUCTOR
-    public class TagsController(ITagService tagsService,
-                            IApplicationUserService applicationUserService,
-                             IPostService postService) : Controller
+    [Route("api/[Controller]")]
+    [ApiController]
+    public class TagsController : ControllerBase
     {
         
-        private readonly ITagService _tagService = tagsService;
-        private readonly IApplicationUserService _applicationUserService = applicationUserService;
-        private readonly IPostService _postService = postService;
+        private readonly ITagService _tagService;
+        private readonly IApplicationUserService _applicationUserService;
+        private readonly IPostService _postService;
+
+    #region  CONSTRUCTOR
+        public TagsController(ITagService tagsService,
+                                IApplicationUserService applicationUserService,
+                                 IPostService postService)
+        {
+            _tagService = tagsService;
+            _applicationUserService = applicationUserService;
+            _postService = postService;
+        }
         #endregion
 
-    #region GET TAGS
+        #region GET TAGS
         public async Task<IActionResult> Index()
         {
             var tags = await _tagService.GetAllTagsAsync();
@@ -75,7 +84,8 @@ namespace Blog2024ApiApp.Controllers
         }
         #endregion
 
-    #region GET EDIT
+        #region GET EDIT
+        [HttpGet]
         [Authorize(Roles = "Author, Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -98,7 +108,7 @@ namespace Blog2024ApiApp.Controllers
     #region POST EDIT
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PostId,AuthorId,Text")] Tag tag)
+        public async Task<ActionResult> Edit(int id, [Bind("Id,PostId,AuthorId,Text")] Tag tag)
         {
             if (id != tag.Id)
             {
