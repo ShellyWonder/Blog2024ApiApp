@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using Blog2024ApiApp.Data;
 using Blog2024ApiApp.Models;
-using Blog2024ApiApp.Services;
 using Blog2024ApiApp.Services.Interfaces;
 
 namespace Blog2024ApiApp.Controllers
@@ -34,159 +26,98 @@ namespace Blog2024ApiApp.Controllers
         }
         #endregion
 
-        #region GET TAGS
-        public async Task<IActionResult> Index()
+        #region GET TAGS/INDEX
+        [HttpGet]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult<IEnumerable<Tag>>> GetTags()
         {
             var tags = await _tagService.GetAllTagsAsync();
-            return View(tags);
+            return Ok(tags);
         }
         #endregion
 
-    #region GET DETAILS
+        #region GET DETAILS
+        [HttpGet("{id}")]
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) return NotFound(new { Message = $"Requested tag{id} was not found. Please select another tag." });
+           
             var tag = await _tagService.GetTagByIdAsync(id.Value);
-            if (tag == null)
-            {
-                return NotFound();
-            }
 
-            return View(tag);
+            if (tag == null) return NotFound(new { Message = $"Requested tag{id} was not found. Please select another tag." });
+            
+            return Ok(tag);
         }
         #endregion
 
-    #region GET CREATE
-        [Authorize(Roles = "Author, Administrator")]
-        public async Task<IActionResult> Create()
-        {
-            await PopulateDropDownLists();
-            return View();
-        }
-        #endregion
-
-    #region POST CREATE
+        #region TAG CREATE
         [HttpPost]
+        [Authorize(Roles = "Administrator, Author")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PostId,AuthorId,TagText")] Tag tag)
+        public async Task<IActionResult> Create([FromBody] Tag tag)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            try
             {
                 await _tagService.AddTagAsync(tag.Text!, tag.PostId, tag.AuthorId!);
-                return RedirectToAction(nameof(Index));
+                return CreatedAtAction(nameof(Details), new { id = tag.Id }, tag);
             }
-            await PopulateDropDownLists();
-            return View(tag);
-        }
-        #endregion
 
-        #region GET EDIT
-        [HttpGet]
-        [Authorize(Roles = "Author, Administrator")]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
+            catch (Exception)
             {
-                return NotFound();
-            }
+                return NotFound(new { message = $"An error occurred while creating the tag." });
 
-            var tag = await _tagService.GetTagByIdAsync(id.Value);
-
-            if (tag == null)
-            {
-                return NotFound();
             }
-            await PopulateDropDownLists();
-            return View(tag);
         }
-        #endregion
+            #endregion
 
-    #region POST EDIT
-        [HttpPost]
+        #region POST EDIT/UPDATE
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator, Author")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, [Bind("Id,PostId,AuthorId,Text")] Tag tag)
+        public async Task<ActionResult> UpdateTag(int id, [FromBody] Tag tag)
         {
-            if (id != tag.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-
-                    await _tagService.UpdateTagAsync(tag);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TagExists(tag.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            await PopulateDropDownLists();
-            return View(tag);
-        }
-        #endregion
-
-    #region GET DELETE
-        [Authorize(Roles = "Author, Administrator")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var tag = await _tagService.GetTagByIdAsync(id.Value);
-            if (tag == null)
-            {
-                return NotFound();
-            }
-
-            return View(tag);
-        }
-        #endregion
-
-    #region POST DELETE
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            await _tagService.DeleteTagAsync(id);
-            return RedirectToAction(nameof(Index));
-        }
-        #endregion
-
-    #region TAG EXISTS
-        private bool TagExists(int id)
-        {
-            return _tagService.TagExists(id);
-        }
-        #endregion
-
-    #region POPULATE DROP DOWN LISTS
-        private async Task PopulateDropDownLists(Tag? tag = null)
-        {
+            if (id != tag.Id) return NotFound(new { message = $"Tag {tag.Id} not found." });
             
-            var authors = await _applicationUserService.GetAllPostAuthorsAsync();
-            var posts = await _postService.GetAllPostsAsync();
-
-            ViewData["AuthorId"] = new SelectList(authors, "AuthorId", "FullName", tag?.AuthorId);
-            ViewData["PostId"] = new SelectList(posts, "Id", "Id", tag?.PostId);
-        }  
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+                
+            try
+            {
+                await _tagService.UpdateTagAsync(tag);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TagExists(tag.Id))
+                {
+                return NotFound(new { message = $"Tag {tag.Id} not found." });
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return NoContent();
+        }
         #endregion
 
+        #region TAG DELETE
+            [HttpDelete("{id}")]
+            [Authorize(Roles = "Author, Administrator")]
+            [ValidateAntiForgeryToken]
+            public async Task<IActionResult> DeleteTag(int id)
+            {
+                await _tagService.DeleteTagAsync(id);
+                return NoContent();
+            }
+            #endregion
+
+        #region TAG EXISTS
+            private bool TagExists(int id)
+            {
+                return _tagService.TagExists(id);
+            }
+            #endregion
     }
 }

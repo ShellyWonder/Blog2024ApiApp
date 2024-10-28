@@ -44,6 +44,7 @@ namespace Blog2024ApiApp.Controllers
         #region SEARCH INDEX
         [HttpGet("search")]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult<IEnumerable<Post>>> SearchIndex(int? page, string searchTerm)
         {
             if (string.IsNullOrEmpty(searchTerm))
@@ -61,6 +62,7 @@ namespace Blog2024ApiApp.Controllers
         #region GET POSTS/INDEX
         [HttpGet]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult<IEnumerable<Post>>>Index()
         {
             var posts = await _postService.GetAllPostsAsync();
@@ -71,6 +73,7 @@ namespace Blog2024ApiApp.Controllers
         #region GET ALL BLOG POSTS INDEX BY BLOG
         [HttpGet("blog/{id}")]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult<IEnumerable<Post>>> BlogPostIndex(int id, int? page)
         {
             var pageNumber = page ?? 1;
@@ -83,18 +86,19 @@ namespace Blog2024ApiApp.Controllers
         #region GET DETAILS 
         [HttpGet("{slug}")]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Details(string slug)
         {
             if (string.IsNullOrEmpty(slug))
             {
-                return NotFound();
+                return NotFound(new { Message = $"Post was not found. Please select another post." });
             }
 
             var post = await _postService.GetPostBySlugAsync(slug);
 
             if (post == null)
             {
-                return NotFound();
+                return NotFound(new { Message = $"Post was not found. Please select another post." });
             }
 
             return Ok(post);
@@ -107,10 +111,8 @@ namespace Blog2024ApiApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult<Post>> PostCreate([FromBody] Post post,List<string>tagValues)
         {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+            
                 try
                 {
                     // Get the current user ID
@@ -159,8 +161,9 @@ namespace Blog2024ApiApp.Controllers
         #endregion
 
         #region EDIT/UPDATE
-       [HttpPut("{id}")]
+        [HttpPut("{id}")]
         [Authorize(Roles = "Administrator, Author")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(int id, [FromBody] Post post,
                                                                      IFormFile newImage,
                                                                      List<string>tagValues)
@@ -231,7 +234,7 @@ namespace Blog2024ApiApp.Controllers
             }
             catch (KeyNotFoundException)
             {
-                return NotFound($"Post with ID {post.Id} was not found.");
+                return NotFound(new { message =$"Post with ID {post.Id} was not found." });
             }
         }
         #endregion
