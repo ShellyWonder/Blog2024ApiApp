@@ -31,7 +31,6 @@ namespace Blog2024ApiApp.Controllers
         #region GET INDEX/productionReady posts by blog
         // GET: api/Home/Index/productionReady posts by blog
         [HttpGet("Index")]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult<IEnumerable<Blog>>> Index(int? page)
         {
             var pageNumber = page ?? 1;
@@ -45,7 +44,6 @@ namespace Blog2024ApiApp.Controllers
         #region GET ABOUT
         // GET: api/Home/About
         [HttpGet("About")]
-        [ValidateAntiForgeryToken]
         public IActionResult About()
         {
             return Ok();
@@ -54,7 +52,6 @@ namespace Blog2024ApiApp.Controllers
 
         #region GET CONTACT
         [HttpGet("Contact")]
-        [ValidateAntiForgeryToken]
         public IActionResult Contact()
         {
             return Ok();
@@ -63,8 +60,7 @@ namespace Blog2024ApiApp.Controllers
 
         #region POST CONTACT
         [HttpPost("Contact")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Contact([FromBody]ContactUsDTO model)
+        public async Task<IActionResult> Contact([FromBody] ContactUsDTO model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 

@@ -29,7 +29,6 @@ namespace Blog2024ApiApp.Controllers
         #region GET TAGS/INDEX
         [HttpGet]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult<IEnumerable<Tag>>> GetTags()
         {
             var tags = await _tagService.GetAllTagsAsync();
@@ -54,7 +53,6 @@ namespace Blog2024ApiApp.Controllers
         #region TAG CREATE
         [HttpPost]
         [Authorize(Roles = "Administrator, Author")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromBody] Tag tag)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -76,7 +74,6 @@ namespace Blog2024ApiApp.Controllers
         #region POST EDIT/UPDATE
         [HttpPut("{id}")]
         [Authorize(Roles = "Administrator, Author")]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> UpdateTag(int id, [FromBody] Tag tag)
         {
             if (id != tag.Id) return NotFound(new { message = $"Tag {tag.Id} not found." });
@@ -105,7 +102,6 @@ namespace Blog2024ApiApp.Controllers
         #region TAG DELETE
             [HttpDelete("{id}")]
             [Authorize(Roles = "Author, Administrator")]
-            [ValidateAntiForgeryToken]
             public async Task<IActionResult> DeleteTag(int id)
             {
                 await _tagService.DeleteTagAsync(id);
