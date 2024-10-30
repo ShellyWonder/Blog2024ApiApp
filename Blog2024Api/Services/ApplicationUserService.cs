@@ -1,17 +1,21 @@
-﻿using Blog2024ApiApp.Data;
-using Blog2024ApiApp.Data.Repositories.Interfaces;
+﻿using Blog2024ApiApp.Data.Repositories.Interfaces;
 using Blog2024ApiApp.Services.Interfaces;
 using Blog2024ApiApp.DTO;
 
 namespace Blog2024ApiApp.Services
 {
- #region PRIMARY CONSTRUCTOR
-    public class ApplicationUserService(IApplicationUserRepository applicationUserRepository) : IApplicationUserService
+    public class ApplicationUserService : IApplicationUserService
     {
-        private readonly IApplicationUserRepository _applicationUserRepository = applicationUserRepository; 
+        private readonly IApplicationUserRepository _applicationUserRepository;
+
+ #region CONSTRUCTOR
+        public ApplicationUserService(IApplicationUserRepository applicationUserRepository)
+        {
+            _applicationUserRepository = applicationUserRepository;
+        }
         #endregion
 
- #region GET ALL USERS 
+        #region GET ALL USERS 
         public async Task<IEnumerable<UserDTO?>> GetAllUsersAsync()
         {
             return await _applicationUserRepository.GetAllUsersAsync();
