@@ -8,11 +8,14 @@ using Blog2024ApiApp.Data.SeedData;
 using Blog2024ApiApp.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Google;
+using Blog2024Api.Services.Interfaces;
+using Blog2024Api.Services;
 
 namespace Blog2024ApiApp.Extensions
 {
     public static class ServicesConfigurationExtensions
     {
+        #region CUSTOM SERVICES
         public static IServiceCollection AddCustomServices(this IServiceCollection services, IConfiguration configuration)
         {
             // Register application services
@@ -26,10 +29,11 @@ namespace Blog2024ApiApp.Extensions
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITagService, TagService>();
-            
+            services.AddScoped<IJwtTokenService, JwtTokenService>();
+
             services.AddScoped<IBlogEmailSender, EmailSender>();
             services.AddScoped<IImageService, ImageService>();
-            
+
 
             services.AddScoped<ISlugRepository, SlugRepository>();
             services.AddScoped<ISlugService, SlugService>();
@@ -50,6 +54,9 @@ namespace Blog2024ApiApp.Extensions
 
             return services;
         }
+        #endregion
+
+        #region IDENTITY WITH ROLES
         public static IServiceCollection AddIdentityWithRoles(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -58,6 +65,9 @@ namespace Blog2024ApiApp.Extensions
                 .AddDefaultTokenProviders();
             return services;
         }
+        #endregion
+
+        #region IDENTITY WITH EXTERNAL PROVIDERS
         public static IServiceCollection AddIdentityWithExternalProviders(this IServiceCollection services, IConfiguration configuration)
         {
 
@@ -96,7 +106,8 @@ namespace Blog2024ApiApp.Extensions
                     githubOptions.ClientSecret = ClientSecret;
                 });
             return services;
-        }
+        } 
+        #endregion
     }
 
 }
