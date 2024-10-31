@@ -1,4 +1,4 @@
-﻿namespace Blog2024ApiApp.DTO
+﻿namespace Blog2024Api.DTO
 {
     public class UserDTO
     {

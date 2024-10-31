@@ -1,5 +1,5 @@
 using Blog2024Api.Data;
-using Blog2024ApiApp.Extensions;
+using Blog2024Api.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
