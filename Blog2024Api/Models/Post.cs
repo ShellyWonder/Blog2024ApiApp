@@ -35,13 +35,13 @@ namespace Blog2024Api.Models
         [DataType(DataType.Date)]
         public DateTime? Updated { get; set; }
 
-        public byte[] ImageData { get; set; } = Array.Empty<byte>();
+        //public byte[] ImageData { get; set; } = Array.Empty<byte>();
 
-        public string? ImageType { get; set; }
+        //public string? ImageType { get; set; }
 
-        // This will be used to upload the file from the form.
-        [NotMapped]
-        public IFormFile? ImageFile { get; set; }
+        //// This will be used to upload the file from the form.
+        //[NotMapped]
+        //public IFormFile? ImageFile { get; set; }
 
 
         //Navigation Properties

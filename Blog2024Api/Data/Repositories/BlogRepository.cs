@@ -50,14 +50,15 @@ namespace Blog2024Api.Data.Repositories
                                        .ToListAsync();
         }
 
-        public async Task<IPagedList<Blog>> GetBlogsByStateAsync(PostState postState, int pageNumber, int pageSize)
+        public async Task<IEnumerable<Blog>> GetBlogsByStateAsync(PostState postState, int pageNumber, int pageSize)
         {
             return await _context.Blogs.Include(b => b.Author)
                                        .Where(b => b.Posts.Any(p => p.BlogPostState == postState))
                                        .OrderByDescending(b => b.Created)
-                                       .ToPagedListAsync(pageNumber, pageSize);
+                                       .Skip((pageNumber - 1) * pageSize)
+                                       .Take(pageSize)
+                                       .ToListAsync();
         }
-
-
+     
     }
 }
