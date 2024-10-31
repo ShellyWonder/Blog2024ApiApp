@@ -3,26 +3,29 @@ using Blog2024Api.Data.Repositories.Interfaces;
 using Blog2024Api.Enums;
 using Blog2024Api.Services.Interfaces;
 using Blog2024Api.DTO;
-using X.PagedList;
-using X.PagedList.EF;
 using Blog2024Api.Models;
 
 namespace Blog2024Api.Services
 {
-    #region PRIMARY CONSTRUCTOR
-    public class BlogService(IBlogRepository blogRepository, IApplicationUserService applicationUserService) : IBlogService
+    public class BlogService : IBlogService
     {
-        private readonly IBlogRepository _blogRepository = blogRepository;
-        private readonly IApplicationUserService _applicationUserService = applicationUserService;
+        private readonly IBlogRepository _blogRepository;
+        private readonly IApplicationUserService _applicationUserService;
 
+    #region CONSTRUCTOR
+        public BlogService(IBlogRepository blogRepository, IApplicationUserService applicationUserService)
+        {
+            _blogRepository = blogRepository;
+            _applicationUserService = applicationUserService;
+        }
         #endregion
 
-#region GET ALL BLOGS
+        #region GET ALL BLOGS
         public async Task<IEnumerable<Blog>> GetAllBlogsAsync()
         {
             return await _blogRepository.GetAllBlogsAsync();
         }
-        public async Task<IPagedList<Blog>> GetBlogsByStateAsync(PostState postState, int pageNumber, int pageSize)
+        public async Task<IEnumerable<Blog>> GetBlogsByStateAsync(PostState postState, int pageNumber, int pageSize)
         {
             return await _blogRepository.GetBlogsByStateAsync(postState, pageNumber, pageSize);
         } 

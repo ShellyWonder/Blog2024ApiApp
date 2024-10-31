@@ -1,17 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Blog2024Api.Data.Repositories.Interfaces;
 using Blog2024Api.Enums;
-using X.PagedList;
-using X.PagedList.EF;
-using Blog2024Api.Data;
 using Blog2024Api.Models;
 
 namespace Blog2024Api.Data.Repositories
 {
-    #region PRIMARY CONSTRUCTOR
-    public class PostRepository(ApplicationDbContext context) : IPostRepository
+    public class PostRepository : IPostRepository
     {
-        private readonly ApplicationDbContext _context = context;
+        private readonly ApplicationDbContext _context;
+
+    #region CONSTRUCTOR
+        public PostRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         #endregion
 
         #region ADD POST
@@ -57,17 +59,19 @@ namespace Blog2024Api.Data.Repositories
 
         #region GET ALL POSTS BY STATE
         //This method allows for any of three post states(Enum) to be passed in as parameters. Will be reused when authorization is implemented
-        public async Task<IPagedList<Post>> GetAllPostsByStateAsync(PostState postState, int pageNumber, int pageSize, int id)
+        public async Task<IEnumerable<Post>> GetAllPostsByStateAsync(PostState postState, int pageNumber, int pageSize, int id)
         {
             return await _context.Posts
                                  .Include(p => p.Author)
                                  .Where(p => p.BlogId == id && p.BlogPostState == postState)
                                  .OrderByDescending(p => p.Created)
-                                 .ToPagedListAsync(pageNumber, pageSize);
+                                 .Skip((pageNumber - 1) * pageSize)
+                                       .Take(pageSize)
+                                       .ToListAsync();
         }
         #endregion
 
-        #region GET POSTS BY BLOG ID
+            #region GET POSTS BY BLOG ID
         public async Task<IEnumerable<Post>> GetPostsByBlogIdAsync(int id)
         {
             return await _context.Posts.Where(p => p.BlogId == id).ToListAsync();

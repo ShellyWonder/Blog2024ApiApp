@@ -1,10 +1,10 @@
 ﻿using Blog2024Api.Data.SeedData;
-using Blog2024Api.Data.SeedData;
 
 namespace Blog2024Api.Extensions
 {
     public  static class DatabaseSeederExtensions
     {
+        #region SEED Database
         public static async Task SeedDatabaseAsync(this IHost app)
         {
             using (var scope = app.Services.CreateScope())
@@ -22,6 +22,7 @@ namespace Blog2024Api.Extensions
                 await blogsDataService.InitializeAsync();
 
             }
-        }
+        } 
+        #endregion
     }
 }

@@ -1,13 +1,12 @@
 ﻿using Blog2024Api.Models;
 using Blog2024Api.Enums;
-using X.PagedList;
 
 namespace Blog2024Api.Data.Repositories.Interfaces
 {
     public interface IPostRepository
     {
         Task<IEnumerable<Post>> GetAllPostsAsync();
-        Task<IPagedList<Post>> GetAllPostsByStateAsync(PostState postState, int pageNumber, int pageSize, int id);
+        Task<IEnumerable<Post>> GetAllPostsByStateAsync(PostState postState, int pageNumber, int pageSize, int id);
 
         Task<IEnumerable<Post>> GetPostsByBlogIdAsync(int id);
         Task<Post> GetPostByIdAsync(int id);

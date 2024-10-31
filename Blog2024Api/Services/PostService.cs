@@ -2,7 +2,6 @@
 using Blog2024Api.Data.Repositories.Interfaces;
 using Blog2024Api.Enums;
 using Blog2024Api.Services.Interfaces;
-using X.PagedList;
 
 namespace Blog2024Api.Services
 {
@@ -38,7 +37,7 @@ namespace Blog2024Api.Services
         {
             return await _postRepository.GetAllPostsAsync();
         }
-        public async Task<IPagedList<Post>> GetAllPostsByStateAsync(PostState postState, int pageNumber, int pageSize, int id)
+        public async Task<IEnumerable<Post>> GetAllPostsByStateAsync(PostState postState, int pageNumber, int pageSize, int id)
         {
             return await _postRepository.GetAllPostsByStateAsync(postState, pageNumber, pageSize, id);
         }

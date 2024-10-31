@@ -7,11 +7,7 @@ using Blog2024Api.DTO;
 using Blog2024Api.Data.SeedData;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Google;
-using Blog2024Api.Services.Interfaces;
-using Blog2024Api.Services;
 using Blog2024Api.Data;
-using Blog2024Api.Data.SeedData;
-using Blog2024Api.Data.Repositories;
 
 namespace Blog2024Api.Extensions
 {
