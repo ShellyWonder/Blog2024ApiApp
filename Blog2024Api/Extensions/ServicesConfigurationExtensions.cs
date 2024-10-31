@@ -1,17 +1,19 @@
 ﻿using Microsoft.AspNetCore.Http.Features;
-using Blog2024ApiApp.Data.Repositories.Interfaces;
-using Blog2024ApiApp.Data.Repositories;
-using Blog2024ApiApp.Services.Interfaces;
-using Blog2024ApiApp.Services;
-using Blog2024ApiApp.DTO;
-using Blog2024ApiApp.Data.SeedData;
-using Blog2024ApiApp.Data;
+using Blog2024Api.Data.Repositories.Interfaces;
+using Blog2024Api.Data.Repositories;
+using Blog2024Api.Services.Interfaces;
+using Blog2024Api.Services;
+using Blog2024Api.DTO;
+using Blog2024Api.Data.SeedData;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Google;
 using Blog2024Api.Services.Interfaces;
 using Blog2024Api.Services;
+using Blog2024Api.Data;
+using Blog2024Api.Data.SeedData;
+using Blog2024Api.Data.Repositories;
 
-namespace Blog2024ApiApp.Extensions
+namespace Blog2024Api.Extensions
 {
     public static class ServicesConfigurationExtensions
     {

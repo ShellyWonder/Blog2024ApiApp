@@ -1,15 +1,15 @@
-using Blog2024ApiApp.Models;
+using Blog2024Api.Models;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Blog2024ApiApp.Data
+namespace Blog2024Api.Data
 {
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
-        
-        [StringLength(50, ErrorMessage ="The {0} must be at least {2} and no more than {1}", MinimumLength =2)]
+
+        [StringLength(50, ErrorMessage = "The {0} must be at least {2} and no more than {1}", MinimumLength = 2)]
         [Display(Name = "First Name")]
         public required string FirstName { get; set; }
 
@@ -24,14 +24,15 @@ namespace Blog2024ApiApp.Data
 
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and no more than {1}", MinimumLength = 2)]
         [Display(Name = "GitHub Url")]
-        public string? GitHubUrl {  get; set; }
+        public string? GitHubUrl { get; set; }
 
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and no more than {1}", MinimumLength = 2)]
         [Display(Name = "LinkedIn Url")]
         public string? LinkdInUrl { get; set; }
 
         [NotMapped]
-        public string? FullName {
+        public string? FullName
+        {
 
             get
             {

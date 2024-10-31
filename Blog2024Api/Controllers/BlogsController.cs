@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Blog2024ApiApp.Data;
-using Blog2024ApiApp.Models;
-using Blog2024ApiApp.Services.Interfaces;
+using Blog2024Api.Services.Interfaces;
+using Blog2024Api.Data;
+using Blog2024Api.Models;
 
-namespace Blog2024ApiApp.Controllers
+namespace Blog2024Api.Controllers
 {
 
     [Route("api/[Controller]")]

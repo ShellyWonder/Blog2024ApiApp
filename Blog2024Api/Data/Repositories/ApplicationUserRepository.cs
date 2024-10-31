@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using Blog2024ApiApp.Data.Repositories.Interfaces;
-using Blog2024ApiApp.DTO;
+using Blog2024Api.Data.Repositories.Interfaces;
+using Blog2024Api.DTO;
 
-namespace Blog2024ApiApp.Data.Repositories
+namespace Blog2024Api.Data.Repositories
 {
     #region PRIMARY CONSTRUCTOR
     public class ApplicationUserRepository(ApplicationDbContext context,
@@ -26,10 +25,10 @@ namespace Blog2024ApiApp.Data.Repositories
                                              });
 
             return await users.ToListAsync();
-        } 
+        }
         #endregion
 
-    #region GET USER BY ID
+        #region GET USER BY ID
         /// <summary>
         /// ApplicationUser inherits id from IdentityUser whose Id is a guid.
         /// Therefore, GetUserByIdAsync has a string id parameter)
@@ -57,7 +56,7 @@ namespace Blog2024ApiApp.Data.Repositories
         }
         #endregion
 
-    #region GET ALL MODERATORS
+        #region GET ALL MODERATORS
         public async Task<IEnumerable<UserDTO?>> GetAllModeratorsAsync()
         {
             var moderators = _context.Comments
@@ -70,22 +69,22 @@ namespace Blog2024ApiApp.Data.Repositories
                 .Distinct();
 
             return await moderators.ToListAsync();
-        } 
+        }
         #endregion
 
- #region GET MODERATOR BY ID/FULL NAME
+        #region GET MODERATOR BY ID/FULL NAME
         public async Task<UserDTO?> GetModeratorByIdAsync(string id)
 
         {
-           var moderator = await _context.Users
-                                    //joining Comments 
-                                    .Where(u => _context.Comments.Any(c => c.ModeratorId == u.Id && u.Id == id))
-                                    .Select(u => new UserDTO
-                                    {
-                                        Id = u.Id,
-                                        FullName = u.FullName 
-                                    })
-                                    .SingleOrDefaultAsync();
+            var moderator = await _context.Users
+                                     //joining Comments 
+                                     .Where(u => _context.Comments.Any(c => c.ModeratorId == u.Id && u.Id == id))
+                                     .Select(u => new UserDTO
+                                     {
+                                         Id = u.Id,
+                                         FullName = u.FullName
+                                     })
+                                     .SingleOrDefaultAsync();
 
 
             // Check if the user is null and throw an exception if needed
@@ -98,7 +97,7 @@ namespace Blog2024ApiApp.Data.Repositories
         }
         #endregion
 
-    #region GET ALL AUTHORS
+        #region GET ALL AUTHORS
         //pulls both BLOG & POST Authors
         public async Task<IEnumerable<UserDTO?>> GetAllAuthorsAsync()
         {
@@ -136,16 +135,16 @@ namespace Blog2024ApiApp.Data.Repositories
                 .Where(p => p.Author != null)
                 .Select(p => new UserDTO
                 {
-                    Id = p.Author!.Id,            
-                    FullName = p.Author!.FullName  
+                    Id = p.Author!.Id,
+                    FullName = p.Author!.FullName
                 })
                 .Distinct();
 
             return await postAuthors.ToListAsync();
         }
         #endregion
-        
-#region GET AUTHOR BY ID
+
+        #region GET AUTHOR BY ID
         public async Task<UserDTO?> GetAuthorByIdAsync(string id)
         {
             // Search for the author in Blogs
@@ -163,7 +162,7 @@ namespace Blog2024ApiApp.Data.Repositories
         #region GET BLOG AUTHOR BY ID
         public async Task<UserDTO?> GetBlogAuthorByIdAsync(string id)
         {
-                // Search for the author in Blogs
+            // Search for the author in Blogs
             var blogAuthor = await _context.Blogs
                 .Where(b => b.Author != null && b.Author.Id == id)
                 .Select(b => new UserDTO
@@ -173,7 +172,7 @@ namespace Blog2024ApiApp.Data.Repositories
                 })
                 .FirstOrDefaultAsync();
 
-                return blogAuthor;
+            return blogAuthor;
         }
         #endregion
 
@@ -189,7 +188,7 @@ namespace Blog2024ApiApp.Data.Repositories
                     FullName = p.Author!.FullName
                 })
                 .FirstOrDefaultAsync();
-                 return postAuthor; 
+            return postAuthor;
         }
         #endregion
 
@@ -202,7 +201,7 @@ namespace Blog2024ApiApp.Data.Repositories
                 .Select(u => new UserDTO
                 {
                     Id = u.Id,
-                    FullName = u.FullName 
+                    FullName = u.FullName
                 })
                 .Distinct();
 
@@ -220,7 +219,7 @@ namespace Blog2024ApiApp.Data.Repositories
                 return new UserDTO
                 {
                     Id = user.Id,
-                    FullName = user.FullName 
+                    FullName = user.FullName
                 };
             }
 
@@ -231,4 +230,4 @@ namespace Blog2024ApiApp.Data.Repositories
     }
 
 }
-    
+

@@ -1,6 +1,6 @@
 ﻿using Blog2024Api.Services.Interfaces;
 
-namespace Blog2024ApiApp.Services.Interfaces
+namespace Blog2024Api.Services.Interfaces
 {
     public interface IImageService
     {

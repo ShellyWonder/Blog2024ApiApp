@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Blog2024ApiApp.Data;
-using Blog2024ApiApp.Models;
-using Blog2024ApiApp.Services.Interfaces;
+using Blog2024Api.Services.Interfaces;
+using Blog2024Api.Data;
+using Blog2024Api.Models;
 
-namespace Blog2024ApiApp.Controllers
+namespace Blog2024Api.Controllers
 {
     [Route("api/[Controller]")]
     [ApiController]
@@ -22,7 +22,7 @@ namespace Blog2024ApiApp.Controllers
                                   IApplicationUserService applicationUserService,
                                   UserManager<ApplicationUser> userManager,
                                   IPostService postService)
-                                  
+
         {
             _commentService = commentService;
             _applicationUserService = applicationUserService;
@@ -33,10 +33,10 @@ namespace Blog2024ApiApp.Controllers
 
         #region GET COMMENTS
         [HttpGet]
-        [Authorize(Roles ="Moderator, Administrator")]
+        [Authorize(Roles = "Moderator, Administrator")]
         public async Task<IActionResult> GetAllComments()
         {
-           var comments = await _commentService.GetAllCommentsAsync();
+            var comments = await _commentService.GetAllCommentsAsync();
             return Ok(comments);
         }
         #endregion
@@ -44,18 +44,18 @@ namespace Blog2024ApiApp.Controllers
         #region GET DETAILS
         // GET: api/Blogs/{id}
         [HttpGet("{id}")]
-        [Authorize(Roles ="Moderator, Commentator, Administrator")]
+        [Authorize(Roles = "Moderator, Commentator, Administrator")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
-                return NotFound((new { message = $"Comment with ID {id} was not found." }));
+                return NotFound(new { message = $"Comment with ID {id} was not found." });
             }
 
             var comment = await _commentService.GetCommentByIdAsync(id.Value);
             if (comment == null)
             {
-                return NotFound((new { message = $"Comment with ID {id} was not found." }));
+                return NotFound(new { message = $"Comment with ID {id} was not found." });
             }
 
             return Ok(comment);
@@ -66,15 +66,15 @@ namespace Blog2024ApiApp.Controllers
         //NOTE: comment author = Commentator
         [HttpPost]
         [Authorize(Roles = "Commentator")]
-        public async Task<ActionResult<Comment>> Create([FromForm]Comment comment)
+        public async Task<ActionResult<Comment>> Create([FromForm] Comment comment)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            
-                // Capture the user's ID and assign it to the CommentatorId
-                comment.CommentatorId = _userManager.GetUserId(User);
-                comment.Created = DateTime.Now;
-                await _commentService.CreateCommentAsync(comment);
-                return CreatedAtAction(nameof(Details), new { id = comment.Id }, comment);
+
+            // Capture the user's ID and assign it to the CommentatorId
+            comment.CommentatorId = _userManager.GetUserId(User);
+            comment.Created = DateTime.Now;
+            await _commentService.CreateCommentAsync(comment);
+            return CreatedAtAction(nameof(Details), new { id = comment.Id }, comment);
         }
         #endregion
 
@@ -84,20 +84,20 @@ namespace Blog2024ApiApp.Controllers
         [Authorize(Roles = "Commentator")]
         public async Task<IActionResult> Update(int id, [FromBody] Comment comment)
         {
-            if (id != comment.Id) return NotFound(new {message = $"Comment with ID {id} was not found."});
-            
+            if (id != comment.Id) return NotFound(new { message = $"Comment with ID {id} was not found." });
+
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            
+
             var existingComment = await _commentService.GetExistingCommentAsync(id);
 
             if (existingComment == null) return NotFound(new { message = $"Comment with ID {id} was not found." });
-            
+
             try
             {
                 existingComment!.Body = comment.Body;
                 existingComment.Updated = DateTime.Now;
                 await _commentService.UpdateCommentAsync(comment);
-                   
+
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -111,23 +111,23 @@ namespace Blog2024ApiApp.Controllers
                 }
             }
             return NoContent();
-           
+
         }
         #endregion
 
         #region COMMENT MODERATE/UPDATE
         [HttpPut("{id}/moderate")]
-        [Authorize(Roles ="Moderator,Administrator")]
+        [Authorize(Roles = "Moderator,Administrator")]
         public async Task<IActionResult> Moderate(int id, [FromBody] Comment comment)
         {
             if (id != comment.Id) return NotFound(new { message = $"Comment with ID {id} was not found." });
-            
+
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            
+
             var existingComment = await _commentService.GetExistingCommentAsync(id);
 
             if (existingComment == null) return NotFound(new { message = "Comment does not exist." });
-            
+
             try
             {
                 existingComment!.ModeratedBody = comment.ModeratedBody;
@@ -156,6 +156,6 @@ namespace Blog2024ApiApp.Controllers
             return NoContent();
         }
         #endregion
-  
+
     }
 }

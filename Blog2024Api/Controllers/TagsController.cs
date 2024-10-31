@@ -1,21 +1,21 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Blog2024ApiApp.Models;
-using Blog2024ApiApp.Services.Interfaces;
+using Blog2024Api.Services.Interfaces;
+using Blog2024Api.Models;
 
-namespace Blog2024ApiApp.Controllers
+namespace Blog2024Api.Controllers
 {
     [Route("api/[Controller]")]
     [ApiController]
     public class TagsController : ControllerBase
     {
-        
+
         private readonly ITagService _tagService;
         private readonly IApplicationUserService _applicationUserService;
         private readonly IPostService _postService;
 
-    #region  CONSTRUCTOR
+        #region  CONSTRUCTOR
         public TagsController(ITagService tagsService,
                                 IApplicationUserService applicationUserService,
                                  IPostService postService)
@@ -41,11 +41,11 @@ namespace Blog2024ApiApp.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound(new { Message = $"Requested tag{id} was not found. Please select another tag." });
-           
+
             var tag = await _tagService.GetTagByIdAsync(id.Value);
 
             if (tag == null) return NotFound(new { Message = $"Requested tag{id} was not found. Please select another tag." });
-            
+
             return Ok(tag);
         }
         #endregion
@@ -69,7 +69,7 @@ namespace Blog2024ApiApp.Controllers
 
             }
         }
-            #endregion
+        #endregion
 
         #region POST EDIT/UPDATE
         [HttpPut("{id}")]
@@ -77,9 +77,9 @@ namespace Blog2024ApiApp.Controllers
         public async Task<ActionResult> UpdateTag(int id, [FromBody] Tag tag)
         {
             if (id != tag.Id) return NotFound(new { message = $"Tag {tag.Id} not found." });
-            
+
             if (!ModelState.IsValid) return BadRequest(ModelState);
-                
+
             try
             {
                 await _tagService.UpdateTagAsync(tag);
@@ -88,7 +88,7 @@ namespace Blog2024ApiApp.Controllers
             {
                 if (!TagExists(tag.Id))
                 {
-                return NotFound(new { message = $"Tag {tag.Id} not found." });
+                    return NotFound(new { message = $"Tag {tag.Id} not found." });
                 }
                 else
                 {
@@ -100,20 +100,20 @@ namespace Blog2024ApiApp.Controllers
         #endregion
 
         #region TAG DELETE
-            [HttpDelete("{id}")]
-            [Authorize(Roles = "Author, Administrator")]
-            public async Task<IActionResult> DeleteTag(int id)
-            {
-                await _tagService.DeleteTagAsync(id);
-                return NoContent();
-            }
-            #endregion
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Author, Administrator")]
+        public async Task<IActionResult> DeleteTag(int id)
+        {
+            await _tagService.DeleteTagAsync(id);
+            return NoContent();
+        }
+        #endregion
 
         #region TAG EXISTS
-            private bool TagExists(int id)
-            {
-                return _tagService.TagExists(id);
-            }
-            #endregion
+        private bool TagExists(int id)
+        {
+            return _tagService.TagExists(id);
+        }
+        #endregion
     }
 }

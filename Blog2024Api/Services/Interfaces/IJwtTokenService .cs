@@ -1,4 +1,4 @@
-﻿using Blog2024ApiApp.Data;
+﻿using Blog2024Api.Data;
 
 namespace Blog2024Api.Services.Interfaces
 {

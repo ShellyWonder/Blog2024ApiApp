@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Blog2024ApiApp.Data;
+using Blog2024Api.Data;
 
 #nullable disable
 
-namespace Blog2024ApiApp.Data.Migrations
+namespace Blog2024Api.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -155,7 +155,7 @@ namespace Blog2024ApiApp.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Blog2024ApiApp.Data.ApplicationUser", b =>
+            modelBuilder.Entity("Blog2024Api.Data.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -244,7 +244,7 @@ namespace Blog2024ApiApp.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Blog2024ApiApp.Models.Blog", b =>
+            modelBuilder.Entity("Blog2024Api.Models.Blog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -284,7 +284,7 @@ namespace Blog2024ApiApp.Data.Migrations
                     b.ToTable("Blogs");
                 });
 
-            modelBuilder.Entity("Blog2024ApiApp.Models.Comment", b =>
+            modelBuilder.Entity("Blog2024Api.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -338,7 +338,7 @@ namespace Blog2024ApiApp.Data.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("Blog2024ApiApp.Models.Post", b =>
+            modelBuilder.Entity("Blog2024Api.Models.Post", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -392,7 +392,7 @@ namespace Blog2024ApiApp.Data.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("Blog2024ApiApp.Models.Tag", b =>
+            modelBuilder.Entity("Blog2024Api.Models.Tag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -429,7 +429,7 @@ namespace Blog2024ApiApp.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Blog2024ApiApp.Data.ApplicationUser", null)
+                    b.HasOne("Blog2024Api.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -438,7 +438,7 @@ namespace Blog2024ApiApp.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Blog2024ApiApp.Data.ApplicationUser", null)
+                    b.HasOne("Blog2024Api.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -453,7 +453,7 @@ namespace Blog2024ApiApp.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Blog2024ApiApp.Data.ApplicationUser", null)
+                    b.HasOne("Blog2024Api.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -462,37 +462,37 @@ namespace Blog2024ApiApp.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Blog2024ApiApp.Data.ApplicationUser", null)
+                    b.HasOne("Blog2024Api.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Blog2024ApiApp.Models.Blog", b =>
+            modelBuilder.Entity("Blog2024Api.Models.Blog", b =>
                 {
-                    b.HasOne("Blog2024ApiApp.Data.ApplicationUser", "Author")
+                    b.HasOne("Blog2024Api.Data.ApplicationUser", "Author")
                         .WithMany("Blogs")
                         .HasForeignKey("AuthorId");
 
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("Blog2024ApiApp.Models.Comment", b =>
+            modelBuilder.Entity("Blog2024Api.Models.Comment", b =>
                 {
-                    b.HasOne("Blog2024ApiApp.Data.ApplicationUser", "Author")
+                    b.HasOne("Blog2024Api.Data.ApplicationUser", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId");
 
-                    b.HasOne("Blog2024ApiApp.Data.ApplicationUser", "Commentator")
+                    b.HasOne("Blog2024Api.Data.ApplicationUser", "Commentator")
                         .WithMany()
                         .HasForeignKey("CommentatorId");
 
-                    b.HasOne("Blog2024ApiApp.Data.ApplicationUser", "Moderator")
+                    b.HasOne("Blog2024Api.Data.ApplicationUser", "Moderator")
                         .WithMany()
                         .HasForeignKey("ModeratorId");
 
-                    b.HasOne("Blog2024ApiApp.Models.Post", "Post")
+                    b.HasOne("Blog2024Api.Models.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -507,13 +507,13 @@ namespace Blog2024ApiApp.Data.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("Blog2024ApiApp.Models.Post", b =>
+            modelBuilder.Entity("Blog2024Api.Models.Post", b =>
                 {
-                    b.HasOne("Blog2024ApiApp.Data.ApplicationUser", "Author")
+                    b.HasOne("Blog2024Api.Data.ApplicationUser", "Author")
                         .WithMany("Posts")
                         .HasForeignKey("AuthorId");
 
-                    b.HasOne("Blog2024ApiApp.Models.Blog", "Blog")
+                    b.HasOne("Blog2024Api.Models.Blog", "Blog")
                         .WithMany("Posts")
                         .HasForeignKey("BlogId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -524,13 +524,13 @@ namespace Blog2024ApiApp.Data.Migrations
                     b.Navigation("Blog");
                 });
 
-            modelBuilder.Entity("Blog2024ApiApp.Models.Tag", b =>
+            modelBuilder.Entity("Blog2024Api.Models.Tag", b =>
                 {
-                    b.HasOne("Blog2024ApiApp.Data.ApplicationUser", "Author")
+                    b.HasOne("Blog2024Api.Data.ApplicationUser", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId");
 
-                    b.HasOne("Blog2024ApiApp.Models.Post", "Post")
+                    b.HasOne("Blog2024Api.Models.Post", "Post")
                         .WithMany("Tags")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -541,19 +541,19 @@ namespace Blog2024ApiApp.Data.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("Blog2024ApiApp.Data.ApplicationUser", b =>
+            modelBuilder.Entity("Blog2024Api.Data.ApplicationUser", b =>
                 {
                     b.Navigation("Blogs");
 
                     b.Navigation("Posts");
                 });
 
-            modelBuilder.Entity("Blog2024ApiApp.Models.Blog", b =>
+            modelBuilder.Entity("Blog2024Api.Models.Blog", b =>
                 {
                     b.Navigation("Posts");
                 });
 
-            modelBuilder.Entity("Blog2024ApiApp.Models.Post", b =>
+            modelBuilder.Entity("Blog2024Api.Models.Post", b =>
                 {
                     b.Navigation("Comments");
 

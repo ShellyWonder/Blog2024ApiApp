@@ -1,9 +1,9 @@
-﻿using Blog2024ApiApp.Data.Repositories.Interfaces;
-using Blog2024ApiApp.Enums;
-using Blog2024ApiApp.Models;
+﻿using Blog2024Api.Models;
+using Blog2024Api.Data.Repositories.Interfaces;
+using Blog2024Api.Enums;
 using Microsoft.EntityFrameworkCore;
 
-namespace Blog2024ApiApp.Data.Repositories
+namespace Blog2024Api.Data.Repositories
 {
 
     public class SearchRepository : ISearchRepository
@@ -45,8 +45,8 @@ namespace Blog2024ApiApp.Data.Repositories
         {
             return await _context.Posts
                 .Where(post => post.BlogPostState == PostState.ProductionReady &&
-                                   (string.IsNullOrEmpty(searchTerm) 
-                                   || post.Title.Contains(searchTerm) 
+                                   (string.IsNullOrEmpty(searchTerm)
+                                   || post.Title.Contains(searchTerm)
                                    || post.Content!.Contains(searchTerm)))
                 .CountAsync();
         }

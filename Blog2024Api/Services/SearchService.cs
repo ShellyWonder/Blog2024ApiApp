@@ -1,9 +1,9 @@
-﻿using Blog2024ApiApp.Data.Repositories.Interfaces;
-using Blog2024ApiApp.Enums;
-using Blog2024ApiApp.Models;
-using Blog2024ApiApp.Services.Interfaces;
+﻿using Blog2024Api.Models;
+using Blog2024Api.Data.Repositories.Interfaces;
+using Blog2024Api.Enums;
+using Blog2024Api.Services.Interfaces;
 
-namespace Blog2024ApiApp.Services
+namespace Blog2024Api.Services
 {
     public class SearchService : ISearchService
     {

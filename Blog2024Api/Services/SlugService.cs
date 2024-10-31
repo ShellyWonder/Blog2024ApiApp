@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
-using Blog2024ApiApp.Data;
-using Blog2024ApiApp.Data.Repositories.Interfaces;
-using Blog2024ApiApp.Services.Interfaces;
+using Blog2024Api.Data;
+using Blog2024Api.Data.Repositories.Interfaces;
+using Blog2024Api.Services.Interfaces;
 
-namespace Blog2024ApiApp.Services
+namespace Blog2024Api.Services
 {
 #region PRIMARY CONSTRUCTOR
     public class SlugService(ISlugRepository slugRepository) : ISlugService

@@ -1,12 +1,12 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Blog2024ApiApp.Enums;
-using Blog2024ApiApp.Models;
-using Blog2024ApiApp.Services.Interfaces;
-using Blog2024ApiApp.DTO;
+using Blog2024Api.Enums;
+using Blog2024Api.Services.Interfaces;
+using Blog2024Api.DTO;
 using Microsoft.AspNetCore.Authorization;
+using Blog2024Api.Models;
 
-namespace Blog2024ApiApp.Controllers
+namespace Blog2024Api.Controllers
 {
     [AllowAnonymous]
     [Route("api/[controller]")]
@@ -17,8 +17,8 @@ namespace Blog2024ApiApp.Controllers
         private readonly IBlogEmailSender _emailSender;
         private readonly IBlogService _blogService;
 
-    #region  CONSTRUCTOR
-        public HomeController(ILogger<HomeController> logger, 
+        #region  CONSTRUCTOR
+        public HomeController(ILogger<HomeController> logger,
                                     IBlogEmailSender emailSender,
                                     IBlogService blogService)
         {
@@ -72,7 +72,7 @@ namespace Blog2024ApiApp.Controllers
             $"Phone: {(string.IsNullOrWhiteSpace(model.Phone) ? "Phone: Not Provided" : model.Phone)}";
                 await _emailSender.SendContactEmailAsync(model.Email, model.Name, model.Subject, model.Message);
 
-                return Ok(new {message = "Your message has been sent successfully." });
+                return Ok(new { message = "Your message has been sent successfully." });
             }
             catch (Exception)
             {
@@ -80,6 +80,6 @@ namespace Blog2024ApiApp.Controllers
             }
         }
         #endregion
- 
+
     }
 }

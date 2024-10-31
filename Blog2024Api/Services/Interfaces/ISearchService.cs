@@ -1,7 +1,7 @@
-﻿using Blog2024ApiApp.Enums;
-using Blog2024ApiApp.Models;
+﻿using Blog2024Api.Models;
+using Blog2024Api.Enums;
 
-namespace Blog2024ApiApp.Services.Interfaces
+namespace Blog2024Api.Services.Interfaces
 {
     public interface ISearchService
     {

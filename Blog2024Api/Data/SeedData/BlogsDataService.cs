@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Blog2024ApiApp.Models;
+using Blog2024Api.Models;
 
-namespace Blog2024ApiApp.Data.SeedData
+namespace Blog2024Api.Data.SeedData
 {
     public class BlogsDataService
     {
@@ -16,7 +15,7 @@ namespace Blog2024ApiApp.Data.SeedData
         }
         public async Task InitializeAsync()
         {
-           
+
             // Check if the database has been seeded
             if (_context.Blogs.Any())
             {
@@ -24,7 +23,7 @@ namespace Blog2024ApiApp.Data.SeedData
             }
 
             // Seed User
-            
+
             var FirstName = "Shelly";
             var LastName = "Wonder";
             var authorEmail = "Shelly.Wonder@Outlook.com";
@@ -44,7 +43,7 @@ namespace Blog2024ApiApp.Data.SeedData
                     EmailConfirmed = true
                 };
 
-                await _userManager.CreateAsync(author, "Abc&123!"); 
+                await _userManager.CreateAsync(author, "Abc&123!");
             }
 
             // Seed Blogs
@@ -64,7 +63,7 @@ namespace Blog2024ApiApp.Data.SeedData
                     Created = DateTime.UtcNow,
                     AuthorId = authorId
                 },
-                new() 
+                new()
                 {
                     Name = "How to use the 12-week year system to prepare for the Web Development Job Market",
                     Description = "A guide on using the 12-week year system to efficiently prepare for the web development job market.",

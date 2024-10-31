@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Blog2024ApiApp.Data;
-using Blog2024ApiApp.Enums;
+using Blog2024Api.Enums;
+using Blog2024Api.Data;
 
-namespace Blog2024ApiApp.Services.Interfaces
+namespace Blog2024Api.Services.Interfaces
 {
     public interface IRolesService
     {

@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Blog2024ApiApp.Data;
-using Blog2024ApiApp.Services.Interfaces;
-using Blog2024ApiApp.DTO;
+using Blog2024Api.Services.Interfaces;
+using Blog2024Api.DTO;
+using Blog2024Api.Data;
 
 
-namespace Blog2024ApiApp.Controllers
+namespace Blog2024Api.Controllers
 {
     [Authorize(Roles = "Administrator")]
     [Route("api/[controller]")]
@@ -18,7 +18,7 @@ namespace Blog2024ApiApp.Controllers
         private readonly IApplicationUserService _applicationUserService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-    #region CONSTRUCTOR
+        #region CONSTRUCTOR
         public UserRolesController(IRolesService rolesService,
                                      IApplicationUserService ApplicationUserService,
                                      UserManager<ApplicationUser> userManager)
@@ -44,8 +44,8 @@ namespace Blog2024ApiApp.Controllers
             {
                 ManageUserRolesDTO viewModel = new();
                 viewModel.ApplicationUser = user;
-                IEnumerable<string>selected = await _rolesService.GetUserRolesAsync(user);
-                viewModel.Roles = new MultiSelectList( await _rolesService.GetRolesAsync(),"Name", "Name", selected);
+                IEnumerable<string> selected = await _rolesService.GetUserRolesAsync(user);
+                viewModel.Roles = new MultiSelectList(await _rolesService.GetRolesAsync(), "Name", "Name", selected);
 
                 model.Add(viewModel);
             }
@@ -77,7 +77,7 @@ namespace Blog2024ApiApp.Controllers
             }
 
             return NoContent();
-        } 
+        }
         #endregion
     }
 }

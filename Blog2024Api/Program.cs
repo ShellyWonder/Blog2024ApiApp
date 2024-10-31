@@ -1,4 +1,4 @@
-using Blog2024ApiApp.Data;
+using Blog2024Api.Data;
 using Blog2024ApiApp.Extensions;
 using Microsoft.EntityFrameworkCore;
 

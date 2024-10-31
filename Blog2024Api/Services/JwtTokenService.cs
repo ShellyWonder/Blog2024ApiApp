@@ -1,5 +1,5 @@
-﻿using Blog2024Api.Services.Interfaces;
-using Blog2024ApiApp.Data;
+﻿using Blog2024Api.Data;
+using Blog2024Api.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

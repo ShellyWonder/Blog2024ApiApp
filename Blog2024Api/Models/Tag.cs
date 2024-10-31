@@ -1,9 +1,8 @@
-﻿using Blog2024ApiApp.Data;
+﻿using Blog2024Api.Data;
 
-
-namespace Blog2024ApiApp.Models
+namespace Blog2024Api.Models
 {
-        public class Tag
+    public class Tag
     {
         public int Id { get; set; }
 

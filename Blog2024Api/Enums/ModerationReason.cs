@@ -1,4 +1,4 @@
-﻿namespace Blog2024ApiApp.Enums
+﻿namespace Blog2024Api.Enums
 {
     public enum ModerationReason
     {

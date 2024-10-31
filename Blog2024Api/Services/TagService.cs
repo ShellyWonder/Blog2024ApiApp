@@ -1,10 +1,10 @@
-﻿using Blog2024ApiApp.Data.Repositories.Interfaces;
-using Blog2024ApiApp.Models;
-using Blog2024ApiApp.Services.Interfaces;
+﻿using Blog2024Api.Models;
+using Blog2024Api.Data.Repositories.Interfaces;
+using Blog2024Api.Services.Interfaces;
 
-namespace Blog2024ApiApp.Services
+namespace Blog2024Api.Services
 {
-#region PRIMARY CONSTRUCTOR
+    #region PRIMARY CONSTRUCTOR
     public class TagService(ITagRepository tagRepository) : ITagService
     {
         private readonly ITagRepository _tagRepository = tagRepository; 

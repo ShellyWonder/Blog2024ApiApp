@@ -1,7 +1,7 @@
-﻿using Blog2024ApiApp.Models;
-using Blog2024ApiApp.Enums;
+﻿using Blog2024Api.Enums;
+using Blog2024Api.Models;
 
-namespace Blog2024ApiApp.Data.Repositories.Interfaces
+namespace Blog2024Api.Data.Repositories.Interfaces
 {
 
     public interface ISearchRepository

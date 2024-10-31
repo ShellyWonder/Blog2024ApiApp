@@ -1,21 +1,21 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
-using Blog2024ApiApp.Data;
-using Blog2024ApiApp.Enums;
+using Blog2024Api.Enums;
+using Blog2024Api.Data;
 
-namespace Blog2024ApiApp.Models
+namespace Blog2024Api.Models
 {
-    
+
     public class Comment
     {
         public int Id { get; set; }
         public string? AuthorId { get; set; }
-        public int PostId {  get; set; }
+        public int PostId { get; set; }
         public string? ModeratorId { get; set; }
         public string? CommentatorId { get; set; }
 
-        [Display(Name ="Comment")]
-        public string? Body {  get; set; }
+        [Display(Name = "Comment")]
+        public string? Body { get; set; }
 
         [Display(Name = "Created Date")]
         public DateTime Created { get; set; }
@@ -44,7 +44,7 @@ namespace Blog2024ApiApp.Models
         public virtual ApplicationUser? Commentator { get; set; }
         public virtual ApplicationUser? Moderator { get; set; }
 
-        
+
 
 
     }

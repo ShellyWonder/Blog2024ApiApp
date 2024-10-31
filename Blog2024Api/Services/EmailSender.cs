@@ -3,10 +3,10 @@ using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MailKit.Net.Smtp;
-using Blog2024ApiApp.DTO;
-using Blog2024ApiApp.Services.Interfaces;
+using Blog2024Api.DTO;
+using Blog2024Api.Services.Interfaces;
 
-namespace Blog2024ApiApp.Services
+namespace Blog2024Api.Services
 {
 #region PRIMARY CONSTRUCTOR
     public class EmailSender(IOptions<MailSettingsDTO> mailSettings) : IBlogEmailSender

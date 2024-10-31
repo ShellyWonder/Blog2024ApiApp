@@ -1,6 +1,7 @@
-﻿using Blog2024ApiApp.Data.SeedData;
+﻿using Blog2024Api.Data.SeedData;
+using Blog2024Api.Data.SeedData;
 
-namespace Blog2024ApiApp.Extensions
+namespace Blog2024Api.Extensions
 {
     public  static class DatabaseSeederExtensions
     {

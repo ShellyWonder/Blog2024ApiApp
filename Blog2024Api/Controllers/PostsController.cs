@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Blog2024ApiApp.Data;
-using Blog2024ApiApp.Enums;
-using Blog2024ApiApp.Models;
-using Blog2024ApiApp.Services.Interfaces;
+using Blog2024Api.Enums;
+using Blog2024Api.Services.Interfaces;
+using Blog2024Api.Data;
+using Blog2024Api.Models;
 
-namespace Blog2024ApiApp.Controllers
+namespace Blog2024Api.Controllers
 {
     [Route("api/[Controller]")]
     [ApiController]
@@ -53,7 +53,7 @@ namespace Blog2024ApiApp.Controllers
 
             var pageNumber = page ?? 1;
             var pageSize = 5;
-            var posts = await _searchService.SearchPostsAsync(PostState.ProductionReady,pageNumber,pageSize, searchTerm);
+            var posts = await _searchService.SearchPostsAsync(PostState.ProductionReady, pageNumber, pageSize, searchTerm);
             return Ok(posts);
         }
         #endregion
@@ -61,7 +61,7 @@ namespace Blog2024ApiApp.Controllers
         #region GET POSTS/INDEX
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Post>>>Index()
+        public async Task<ActionResult<IEnumerable<Post>>> Index()
         {
             var posts = await _postService.GetAllPostsAsync();
             return Ok(posts);
@@ -104,53 +104,53 @@ namespace Blog2024ApiApp.Controllers
         #region POST CREATE
         [HttpPost]
         [Authorize(Roles = "Administrator, Author")]
-        public async Task<ActionResult<Post>> PostCreate([FromBody] Post post,List<string>tagValues)
+        public async Task<ActionResult<Post>> PostCreate([FromBody] Post post, List<string> tagValues)
         {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
-            
-                try
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            try
+            {
+                // Get the current user ID
+                var authorId = _userManager.GetUserId(User);
+                post.AuthorId = authorId;
+
+                #region SLUG CREATION AND VALIDATION 
+                //
+                var slug = _slugService.UrlFriendly(post.Title);
+
+                //check for blank or malformed slugs
+                if (string.IsNullOrEmpty(slug) || !_slugService.IsUnique(slug))
                 {
-                    // Get the current user ID
-                    var authorId = _userManager.GetUserId(User);
-                    post.AuthorId = authorId;
-
-                    #region SLUG CREATION AND VALIDATION 
-                    //
-                    var slug = _slugService.UrlFriendly(post.Title);
-
-                    //check for blank or malformed slugs
-                    if (string.IsNullOrEmpty(slug) || !_slugService.IsUnique(slug))
-                    {
-                        return BadRequest("Invalid or duplicate title. Please choose another.");
-                    }
-                     post.Slug = slug;
-                    #endregion
-
-                    #region IMAGE HANDLING
-                    // Convert the uploaded image to a byte array and store it in database
-                    post = await _imageService.SetImageAsync(post);
-                    #endregion
-
-                    #region TAG CREATION AND VALIDATION
-
-                    foreach (var tagText in tagValues)
-                    {
-                        // Add each tag using the tag service/repository method
-                        await _tagService.AddTagAsync(tagText, post.Id, authorId!);
-                    }
-
-                    #endregion 
-
-                    #region SAVE
-                    // Pass userId to the service/repository
-                    await _postService.AddPostAsync(post, authorId!);
-                        return CreatedAtAction(nameof(Details), new { slug = post.Slug }, post);
+                    return BadRequest("Invalid or duplicate title. Please choose another.");
                 }
-                catch (Exception)
+                post.Slug = slug;
+                #endregion
+
+                #region IMAGE HANDLING
+                // Convert the uploaded image to a byte array and store it in database
+                post = await _imageService.SetImageAsync(post);
+                #endregion
+
+                #region TAG CREATION AND VALIDATION
+
+                foreach (var tagText in tagValues)
                 {
-
-                    return NotFound($"An error occurred while creating the post.");
+                    // Add each tag using the tag service/repository method
+                    await _tagService.AddTagAsync(tagText, post.Id, authorId!);
                 }
+
+                #endregion
+
+                #region SAVE
+                // Pass userId to the service/repository
+                await _postService.AddPostAsync(post, authorId!);
+                return CreatedAtAction(nameof(Details), new { slug = post.Slug }, post);
+            }
+            catch (Exception)
+            {
+
+                return NotFound($"An error occurred while creating the post.");
+            }
             #endregion
         }
         #endregion
@@ -160,12 +160,12 @@ namespace Blog2024ApiApp.Controllers
         [Authorize(Roles = "Administrator, Author")]
         public async Task<IActionResult> Update(int id, [FromBody] Post post,
                                                                      IFormFile newImage,
-                                                                     List<string>tagValues)
+                                                                     List<string> tagValues)
         {
             if (id != post.Id) return NotFound($"Post with ID {post.Id} was not found.");
 
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            
+
             try
             {
                 // Get the current user ID
@@ -182,7 +182,7 @@ namespace Blog2024ApiApp.Controllers
                 // Generate a new slug from the updated title and validate uniqueness
                 var newSlug = _slugService.UrlFriendly(post.Title);
 
-                if (newSlug != newPost.Slug &&  _slugService.IsUnique(newSlug))
+                if (newSlug != newPost.Slug && _slugService.IsUnique(newSlug))
                 {
                     newPost.Slug = newSlug;
                 }
@@ -218,7 +218,7 @@ namespace Blog2024ApiApp.Controllers
                 {
                     await _tagService.AddTagAsync(tagText, post.Id, userId!);
                 }
-               #endregion
+                #endregion
 
                 #region SAVE
                 // Pass userId to the service/repository,updating the rest of the post
@@ -228,14 +228,14 @@ namespace Blog2024ApiApp.Controllers
             }
             catch (KeyNotFoundException)
             {
-                return NotFound(new { message =$"Post with ID {post.Id} was not found." });
+                return NotFound(new { message = $"Post with ID {post.Id} was not found." });
             }
         }
         #endregion
 
         #region POST DELETE
         [HttpDelete("{id}")]
-        [Authorize (Roles= "Administrator, Author")]
+        [Authorize(Roles = "Administrator, Author")]
         public async Task<IActionResult> PostDelete(int id)
         {
             if (!await PostExists(id)) return NotFound();
@@ -250,8 +250,8 @@ namespace Blog2024ApiApp.Controllers
         }
         #endregion
 
-       
-        
+
+
     }
-    
+
 }

@@ -1,12 +1,10 @@
 ﻿using Blog2024Api.Services.Interfaces;
-using Blog2024ApiApp.Models;
-using Blog2024ApiApp.Services.Interfaces;
 
-namespace Blog2024ApiApp.Services
+namespace Blog2024Api.Services
 {
     public class ImageService : IImageService
     {
-    #region CONVERT FILE TO BYTE ARRAY
+        #region CONVERT FILE TO BYTE ARRAY
         //image delivered to database from the client
         public async Task<byte[]> ConvertFileToByteArrayAsync(IFormFile file)
         {
@@ -17,26 +15,26 @@ namespace Blog2024ApiApp.Services
         }
         #endregion
 
-    #region CONVERT FILE TO BYTE ARRAY(OVERLOAD)
+        #region CONVERT FILE TO BYTE ARRAY(OVERLOAD)
         //image delivered to database from the client(overload)
         public async Task<byte[]> ConvertFileToByteArrayAsync(string fileName)
         {
             var file = $"{Directory.GetCurrentDirectory()}/wwwroot/img/{fileName}";
             return await File.ReadAllBytesAsync(file);
-        } 
+        }
         #endregion
 
-    #region DECODE IMAGE
+        #region DECODE IMAGE
         //image delivered from database to the client
         public string? DecodeImage(byte[] data, string type)
         {
             if (data is null || type is null) return null;
             return $"data:image/{type};base64,{Convert.ToBase64String(data)}";
 
-        } 
+        }
         #endregion
 
-    #region GET FILE TYPE
+        #region GET FILE TYPE
         public string GetFileType(IFormFile file)
         {
             return file.ContentType;
@@ -44,7 +42,7 @@ namespace Blog2024ApiApp.Services
         #endregion
 
         #region IMG IMPLEMENTATION
-        public async Task<T> SetImageAsync<T>(T entity) where T : IImageEntity 
+        public async Task<T> SetImageAsync<T>(T entity) where T : IImageEntity
         {
             if (entity.ImageFile != null)
             {    //Convert incoming file into a byte array
@@ -55,7 +53,7 @@ namespace Blog2024ApiApp.Services
             {
                 // Assign default image if no image is uploaded
                 var defaultImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "default_icon.png");
-                entity.ImageData = await System.IO.File.ReadAllBytesAsync(defaultImagePath);
+                entity.ImageData = await File.ReadAllBytesAsync(defaultImagePath);
                 entity.ImageType = "image/png";
             }
             return entity;
@@ -66,7 +64,7 @@ namespace Blog2024ApiApp.Services
         public int Size(IFormFile file)
         {
             return Convert.ToInt32(file?.Length);
-        } 
+        }
         #endregion
 
     }

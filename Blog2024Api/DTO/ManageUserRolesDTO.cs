@@ -1,7 +1,7 @@
-﻿using Blog2024ApiApp.Data;
+﻿using Blog2024Api.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Blog2024ApiApp.DTO
+namespace Blog2024Api.DTO
 {
     public class ManageUserRolesDTO
     {

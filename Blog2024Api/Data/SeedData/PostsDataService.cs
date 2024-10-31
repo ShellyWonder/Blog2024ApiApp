@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Blog2024ApiApp.Models;
-using global::Blog2024ApiApp.Enums;
+using global::Blog2024Api.Enums;
+using Blog2024Api.Data;
+using Blog2024Api.Models;
 
-namespace Blog2024ApiApp.Data.SeedData
+namespace Blog2024Api.Data.SeedData
 {
 
     public class PostsDataService(ApplicationDbContext context)

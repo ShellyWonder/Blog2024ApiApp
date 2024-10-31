@@ -1,7 +1,7 @@
-﻿using Blog2024ApiApp.Data;
-using Blog2024ApiApp.DTO;
+﻿using Blog2024Api.Data;
+using Blog2024Api.DTO;
 
-namespace Blog2024ApiApp.Services.Interfaces
+namespace Blog2024Api.Services.Interfaces
 {
     public interface IApplicationUserService
     {

@@ -1,6 +1,6 @@
-﻿using Blog2024ApiApp.DTO;
+﻿using Blog2024Api.DTO;
 
-namespace Blog2024ApiApp.Data.Repositories.Interfaces
+namespace Blog2024Api.Data.Repositories.Interfaces
 {
     public interface IApplicationUserRepository
     {

@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Blog2024ApiApp.Data.Repositories.Interfaces;
-using Blog2024ApiApp.Enums;
-using Blog2024ApiApp.Models;
+using Blog2024Api.Data.Repositories.Interfaces;
+using Blog2024Api.Enums;
 using X.PagedList;
 using X.PagedList.EF;
+using Blog2024Api.Data;
+using Blog2024Api.Models;
 
-namespace Blog2024ApiApp.Data.Repositories
+namespace Blog2024Api.Data.Repositories
 {
     #region PRIMARY CONSTRUCTOR
     public class PostRepository(ApplicationDbContext context) : IPostRepository

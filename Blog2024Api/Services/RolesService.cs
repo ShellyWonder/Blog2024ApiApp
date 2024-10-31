@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.Design;
 using System.Data;
-using Blog2024ApiApp.Data;
-using Blog2024ApiApp.Enums;
-using Blog2024ApiApp.Services.Interfaces;
+using Blog2024Api.Enums;
+using Blog2024Api.Services.Interfaces;
+using Blog2024Api.Data;
 
 
-namespace Blog2024ApiApp.Services
+namespace Blog2024Api.Services
 {
     #region PRIMARY CONSTRUCTOR
     public class RolesService(UserManager<ApplicationUser> userManager,

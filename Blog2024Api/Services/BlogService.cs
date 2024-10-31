@@ -1,15 +1,15 @@
-﻿using Blog2024ApiApp.Data;
-using Blog2024ApiApp.Data.Repositories.Interfaces;
-using Blog2024ApiApp.Enums;
-using Blog2024ApiApp.Models;
-using Blog2024ApiApp.Services.Interfaces;
-using Blog2024ApiApp.DTO;
+﻿using Blog2024Api.Data;
+using Blog2024Api.Data.Repositories.Interfaces;
+using Blog2024Api.Enums;
+using Blog2024Api.Services.Interfaces;
+using Blog2024Api.DTO;
 using X.PagedList;
 using X.PagedList.EF;
+using Blog2024Api.Models;
 
-namespace Blog2024ApiApp.Services
+namespace Blog2024Api.Services
 {
-#region PRIMARY CONSTRUCTOR
+    #region PRIMARY CONSTRUCTOR
     public class BlogService(IBlogRepository blogRepository, IApplicationUserService applicationUserService) : IBlogService
     {
         private readonly IBlogRepository _blogRepository = blogRepository;

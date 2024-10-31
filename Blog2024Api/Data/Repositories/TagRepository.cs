@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Blog2024ApiApp.Data.Repositories.Interfaces;
-using Blog2024ApiApp.Models;
+using Blog2024Api.Data.Repositories.Interfaces;
+using Blog2024Api.Data;
+using Blog2024Api.Models;
 
-namespace Blog2024ApiApp.Data.Repositories
+namespace Blog2024Api.Data.Repositories
 {
     public class TagRepository(ApplicationDbContext context) : ITagRepository
     {
@@ -36,7 +37,7 @@ namespace Blog2024ApiApp.Data.Repositories
                     Text = tagText,
                     PostId = postId,
                     // Associate the tag with the author (ApplicationUserId)
-                    AuthorId = authorId 
+                    AuthorId = authorId
                 };
 
                 _context.Tags.Add(newTag);

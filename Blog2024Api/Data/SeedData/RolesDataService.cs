@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-using Blog2024ApiApp.Enums;
+using Blog2024Api.Enums;
+using Blog2024Api.Data;
 
-namespace Blog2024ApiApp.Data.SeedData
+namespace Blog2024Api.Data.SeedData
 {
     public class RolesDataService
     {

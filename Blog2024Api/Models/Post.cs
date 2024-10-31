@@ -1,18 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Blog2024Api.Data;
 using Blog2024Api.Services.Interfaces;
-using Blog2024ApiApp.Data;
-using Blog2024ApiApp.Enums;
+using Blog2024Api.Enums;
 
 
-namespace Blog2024ApiApp.Models
+namespace Blog2024Api.Models
 {
-    public class Post : IImageEntity
+    public partial class Post : IImageEntity
     {
         public int Id { get; set; }
-        
+
         public int BlogId { get; set; }
-        public string? AuthorId {  get; set; }
+        public string? AuthorId { get; set; }
 
         [Display(Name = "Post Title")]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and no more than {1}", MinimumLength = 2)]
@@ -21,10 +21,10 @@ namespace Blog2024ApiApp.Models
         [StringLength(1000, ErrorMessage = "The {0} must be at least {2} and no more than {1}", MinimumLength = 2)]
         public required string? Abstract { get; set; }
 
-       [Display(Name ="Post Body")]
-       public required string? Content { get; set; }   
+        [Display(Name = "Post Body")]
+        public required string? Content { get; set; }
 
-        public string? Slug {  get; set; }
+        public string? Slug { get; set; }
 
         [Display(Name = "Post State")]
         public PostState BlogPostState { get; set; }

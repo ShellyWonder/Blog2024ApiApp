@@ -1,12 +1,12 @@
-﻿using Blog2024ApiApp.Data.Repositories.Interfaces;
-using Blog2024ApiApp.Enums;
-using Blog2024ApiApp.Models;
-using Blog2024ApiApp.Services.Interfaces;
+﻿using Blog2024Api.Models;
+using Blog2024Api.Data.Repositories.Interfaces;
+using Blog2024Api.Enums;
+using Blog2024Api.Services.Interfaces;
 using X.PagedList;
 
-namespace Blog2024ApiApp.Services
+namespace Blog2024Api.Services
 {
-#region PRIMARY CONSTRUCTOR
+    #region PRIMARY CONSTRUCTOR
     public class PostService(IPostRepository postRepository) : IPostService
     {
         private readonly IPostRepository _postRepository = postRepository; 

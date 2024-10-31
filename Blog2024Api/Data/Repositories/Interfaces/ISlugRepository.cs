@@ -1,4 +1,4 @@
-﻿namespace Blog2024ApiApp.Data.Repositories.Interfaces
+﻿namespace Blog2024Api.Data.Repositories.Interfaces
 {
     public interface ISlugRepository
     {
