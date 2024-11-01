@@ -1,4 +1,5 @@
 ﻿using Blog2024Api.Services.Interfaces;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Blog2024Api.Models
 {
@@ -8,6 +9,8 @@ namespace Blog2024Api.Models
         // Fulfills the interface requirements without duplication.
         public byte[]? ImageData { get; set; }
         public string? ImageType { get; set; }
+
+        [NotMapped]
         public IFormFile? ImageFile { get; set; }
 
     }
