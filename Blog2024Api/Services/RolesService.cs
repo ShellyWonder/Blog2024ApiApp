@@ -43,7 +43,13 @@ namespace Blog2024Api.Services
             try
             {
                 List<IdentityRole> result = new();
-                result = await _context.Roles.ToListAsync();
+                result = await _context.Roles.Select(role => new IdentityRole
+                {
+                    Id = role.Id.ToString(),  // Ensure this matches the type (string)
+                    Name = role.Name,
+                   
+                })
+            .ToListAsync();
                 return result;
             }
             catch (Exception)
@@ -71,10 +77,12 @@ namespace Blog2024Api.Services
                 string roleName = role.ToString();
 
                 // Get users already in the specified role
-                List<string> userIds = (await _userManager.GetUsersInRoleAsync(roleName)).Select(u => u.Id).ToList();
+                List<string> userIds = (await _userManager.GetUsersInRoleAsync(roleName)).Select(u => u.Id.ToString()).ToList();
+
 
                 // Get users not in the specified role
-                List<ApplicationUser> roleUsers = _context.Users.Where(u => !userIds.Contains(u.Id)).ToList();
+                List<ApplicationUser> roleUsers = _context.Users.Where(u => !userIds.Contains(u.Id.ToString())).ToList();
+
 
                 return roleUsers;
             }
