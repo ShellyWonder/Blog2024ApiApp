@@ -1,4 +1,4 @@
-﻿using Blog2024Api.Data;
+﻿using Blog2024Api.Identity;
 using Blog2024Api.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;

@@ -1,5 +1,5 @@
-﻿using Blog2024Api.Data;
-using Blog2024Api.DTO;
+﻿using Blog2024Api.DTO;
+using Blog2024Api.Identity;
 using Blog2024Api.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

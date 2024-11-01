@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Blog2024Api.Data.Repositories.Interfaces;
 using Blog2024Api.DTO;
+using Blog2024Api.Identity;
 
 namespace Blog2024Api.Data.Repositories
 {

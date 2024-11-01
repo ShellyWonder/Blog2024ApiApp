@@ -1,7 +1,6 @@
-﻿using Blog2024Api.Data;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
-namespace Blog2024Api.Models
+namespace Blog2024Api.Identity
 {
     public class UserRole : IdentityUserRole<Guid>
     {

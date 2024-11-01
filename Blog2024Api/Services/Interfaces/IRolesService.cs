@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Blog2024Api.Enums;
-using Blog2024Api.Data;
+using Blog2024Api.Identity;
 
 namespace Blog2024Api.Services.Interfaces
 {

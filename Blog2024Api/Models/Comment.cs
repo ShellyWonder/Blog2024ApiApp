@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using Blog2024Api.Enums;
-using Blog2024Api.Data;
+using Blog2024Api.Identity;
 
 namespace Blog2024Api.Models
 {

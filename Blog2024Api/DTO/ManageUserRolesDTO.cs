@@ -1,4 +1,4 @@
-﻿using Blog2024Api.Data;
+﻿using Blog2024Api.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Blog2024Api.DTO

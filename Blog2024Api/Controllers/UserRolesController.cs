@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Blog2024Api.Services.Interfaces;
 using Blog2024Api.DTO;
-using Blog2024Api.Data;
+using Blog2024Api.Identity;
 
 
 namespace Blog2024Api.Controllers

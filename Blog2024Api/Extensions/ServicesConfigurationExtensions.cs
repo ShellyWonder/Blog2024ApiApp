@@ -8,6 +8,7 @@ using Blog2024Api.Data.SeedData;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Google;
 using Blog2024Api.Data;
+using Blog2024Api.Identity;
 
 namespace Blog2024Api.Extensions
 {
