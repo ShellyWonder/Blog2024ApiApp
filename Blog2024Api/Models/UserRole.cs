@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Blog2024Api.Models
 {
-    public class UserRole : IdentityUserRole<int>
+    public class UserRole : IdentityUserRole<Guid>
     {
 
         public required ApplicationUser User { get; set; } = null!;

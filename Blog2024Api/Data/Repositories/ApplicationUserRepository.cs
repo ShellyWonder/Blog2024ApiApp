@@ -20,7 +20,7 @@ namespace Blog2024Api.Data.Repositories
         #endregion
 
         #region GET ALL USERS
-        public async Task<IEnumerable<UserDTO>> GetAllUsersAsync()
+        public async Task<IEnumerable<UserDTO?>> GetAllUsersAsync()
         {
 
             var users = _context.Users
@@ -44,10 +44,10 @@ namespace Blog2024Api.Data.Repositories
         {
             // Await the result and store it in a variable
             var user = await _context.Users
-                                     .Where(x => x.Id == id)
+                                     .Where(x => x.Id.ToString() == id)
                                      .Select(x => new UserDTO
                                      {
-                                         Id = x.Id,
+                                         Id = x.Id.ToString(),
                                          FullName = x.FullName
                                      })
                                      .SingleOrDefaultAsync();
@@ -87,8 +87,8 @@ namespace Blog2024Api.Data.Repositories
                 throw new ArgumentException("Invalid ID format.", nameof(id));
             }
             var moderator = await _context.Users
-                                     //joining Comments 
-                                     .Where(u => _context.Comments.Any(c => c.ModeratorId == u.Id && u.Id == id))
+                                      //joining Comments 
+                                      .Where(u => _context.Comments.Any(c => c.ModeratorId == u.Id.ToString() && u.Id == moderatorId))
                                      .Select(u => new UserDTO
                                      {
                                          Id = u.Id.ToString(),
@@ -174,10 +174,10 @@ namespace Blog2024Api.Data.Repositories
         {
             // Search for the author in Blogs
             var blogAuthor = await _context.Blogs
-                .Where(b => b.Author != null && b.Author.Id == id)
+                .Where(b => b.Author != null && b.Author.Id.ToString() == id)
                 .Select(b => new UserDTO
                 {
-                    Id = b.Author!.Id,
+                    Id = b.Author!.Id.ToString(),
                     FullName = b.Author!.FullName
                 })
                 .FirstOrDefaultAsync();
@@ -191,10 +191,10 @@ namespace Blog2024Api.Data.Repositories
         {
             //search for the author in Posts
             var postAuthor = await _context.Posts
-                .Where(p => p.Author != null && p.Author.Id == id)
+                .Where(p => p.Author != null && p.Author.Id.ToString() == id)
                 .Select(p => new UserDTO
                 {
-                    Id = p.Author!.Id,
+                    Id = p.Author!.Id.ToString(),
                     FullName = p.Author!.FullName
                 })
                 .FirstOrDefaultAsync();
@@ -210,7 +210,7 @@ namespace Blog2024Api.Data.Repositories
             var administrators = usersInRole
                 .Select(u => new UserDTO
                 {
-                    Id = u.Id,
+                    Id = u.Id.ToString(),
                     FullName = u.FullName
                 })
                 .Distinct();
@@ -228,7 +228,7 @@ namespace Blog2024Api.Data.Repositories
             {
                 return new UserDTO
                 {
-                    Id = user.Id,
+                    Id = user.Id.ToString(),
                     FullName = user.FullName
                 };
             }

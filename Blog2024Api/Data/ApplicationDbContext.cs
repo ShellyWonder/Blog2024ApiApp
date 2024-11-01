@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Blog2024Api.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Role, int, IdentityUserClaim<int>,
-                                                         UserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, 
-                                                         IdentityUserToken<int>>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Role, Guid, IdentityUserClaim<Guid>,
+                                                         UserRole, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>,
+                                                         IdentityUserToken<Guid>>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
            : base(options)
