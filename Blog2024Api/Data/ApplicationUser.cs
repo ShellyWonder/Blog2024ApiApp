@@ -5,8 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Blog2024Api.Data
 {
-    // Add profile data for application users by adding properties to the ApplicationUser class
-    public class ApplicationUser : IdentityUser<int>
+    public class ApplicationUser : IdentityUser<Guid>
     {
 
         [StringLength(50, ErrorMessage = "The {0} must be at least {2} and no more than {1}", MinimumLength = 2)]

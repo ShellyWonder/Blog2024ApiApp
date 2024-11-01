@@ -35,7 +35,7 @@ namespace Blog2024Api.Data.SeedData
                 // Create the user if not found
                 author = new ApplicationUser
                 {
-                    Id = authorId,
+                    Id = authorId.ToString(),
                     FirstName = FirstName,
                     LastName = FirstName,
                     UserName = authorEmail,

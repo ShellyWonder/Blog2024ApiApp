@@ -135,7 +135,7 @@ namespace Blog2024Api.Controllers
 
             var userDto = new UserDTO
             {
-                Id = user.Id,
+                Id = user.Id.ToString(),
                 UserName = user.UserName,
                 Email = user.Email,
                 FullName = user.FullName,

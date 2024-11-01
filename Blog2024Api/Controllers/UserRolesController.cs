@@ -59,7 +59,7 @@ namespace Blog2024Api.Controllers
         [HttpPost("ManageUserRoles")]
         public async Task<IActionResult> ManageUserRoles([FromBody] ManageUserRolesDTO model)
         {
-            ApplicationUser user = await _userManager.FindByIdAsync(model.ApplicationUser.Id);
+            ApplicationUser user = await _userManager.FindByIdAsync(model.ApplicationUser.Id.ToString());
             if (user == null)
             {
                 return NotFound();

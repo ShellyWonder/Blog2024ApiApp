@@ -5,24 +5,30 @@ using Blog2024Api.DTO;
 
 namespace Blog2024Api.Data.Repositories
 {
-    #region PRIMARY CONSTRUCTOR
-    public class ApplicationUserRepository(ApplicationDbContext context,
-                                            UserManager<ApplicationUser> userManager) : IApplicationUserRepository
+    public class ApplicationUserRepository : IApplicationUserRepository
     {
-        private readonly ApplicationDbContext _context = context;
-        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+    #region CONSTRUCTOR
+        public ApplicationUserRepository(ApplicationDbContext context,
+                                                UserManager<ApplicationUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
         #endregion
 
         #region GET ALL USERS
-        public async Task<IEnumerable<UserDTO?>> GetAllUsersAsync()
+        public async Task<IEnumerable<UserDTO>> GetAllUsersAsync()
         {
 
             var users = _context.Users
-                                             .Select(u => new UserDTO
-                                             {
-                                                 Id = u.Id,              // Access the Id from ApplicationUser
-                                                 FullName = u.FullName    // Access the FullName from ApplicationUser
-                                             });
+                                    .Select(u => new UserDTO
+                                    {
+                                        Id = u.Id.ToString(),              // Access the Id from ApplicationUser
+                                        FullName = u.FullName    // Access the FullName from ApplicationUser
+                                    });
 
             return await users.ToListAsync();
         }
@@ -63,7 +69,7 @@ namespace Blog2024Api.Data.Repositories
                 .Where(c => c.Moderator != null)
                 .Select(c => new UserDTO
                 {
-                    Id = c.Moderator!.Id,
+                    Id = c.Moderator!.Id.ToString(),
                     FullName = c.Moderator!.FullName
                 })
                 .Distinct();
@@ -74,14 +80,18 @@ namespace Blog2024Api.Data.Repositories
 
         #region GET MODERATOR BY ID/FULL NAME
         public async Task<UserDTO?> GetModeratorByIdAsync(string id)
-
         {
+            // Attempt to parse the string id to a Guid
+            if (!Guid.TryParse(id, out Guid moderatorId))
+            {
+                throw new ArgumentException("Invalid ID format.", nameof(id));
+            }
             var moderator = await _context.Users
                                      //joining Comments 
                                      .Where(u => _context.Comments.Any(c => c.ModeratorId == u.Id && u.Id == id))
                                      .Select(u => new UserDTO
                                      {
-                                         Id = u.Id,
+                                         Id = u.Id.ToString(),
                                          FullName = u.FullName
                                      })
                                      .SingleOrDefaultAsync();
@@ -118,7 +128,7 @@ namespace Blog2024Api.Data.Repositories
                 .Where(b => b.Author != null)
                 .Select(p => new UserDTO
                 {
-                    Id = p.Author!.Id,
+                    Id = p.Author!.Id.ToString(),
                     FullName = p.Author!.FullName
                 })
                 .Distinct();
@@ -135,7 +145,7 @@ namespace Blog2024Api.Data.Repositories
                 .Where(p => p.Author != null)
                 .Select(p => new UserDTO
                 {
-                    Id = p.Author!.Id,
+                    Id = p.Author!.Id.ToString(),
                     FullName = p.Author!.FullName
                 })
                 .Distinct();
