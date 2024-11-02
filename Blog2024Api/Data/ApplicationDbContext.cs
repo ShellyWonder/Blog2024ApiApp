@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Blog2024Api.Models;
 using Microsoft.AspNetCore.Identity;
-using Blog2024Api.Identity;
+using Blog2024Api.UserIdentity;
 
 namespace Blog2024Api.Data
 {

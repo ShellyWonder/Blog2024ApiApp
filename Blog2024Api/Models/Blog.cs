@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Blog2024Api.Services.Interfaces;
-using Blog2024Api.Enums;
-using Blog2024Api.Identity;
+using Blog2024Api.UserIdentity;
 
 namespace Blog2024Api.Models
 {

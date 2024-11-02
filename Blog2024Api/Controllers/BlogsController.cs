@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Blog2024Api.Services.Interfaces;
 using Blog2024Api.Models;
-using Blog2024Api.Identity;
+using Blog2024Api.UserIdentity;
 
 namespace Blog2024Api.Controllers
 {

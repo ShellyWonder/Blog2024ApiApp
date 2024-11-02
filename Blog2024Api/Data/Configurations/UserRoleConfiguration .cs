@@ -1,4 +1,4 @@
-﻿using Blog2024Api.Identity;
+﻿using Blog2024Api.UserIdentity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

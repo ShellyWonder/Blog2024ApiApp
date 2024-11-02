@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Blog2024Api.Identity
+namespace Blog2024Api.UserIdentity
 {
     public class ApplicationUser : IdentityUser<Guid>
     {
